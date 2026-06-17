@@ -46,7 +46,7 @@ function doGet(e) {
 }
 
 function extractKey(header) {
-  const match = header.match(/\(([^)]+)\)/);
+  const match = header.match(/.*\(([^)]+)\)/);
   if (match) return match[1].toLowerCase();
   const lower = header.toString().toLowerCase();
   if (lower === "timestamp") return "timestamp";
