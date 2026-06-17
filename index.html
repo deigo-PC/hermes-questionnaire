@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermes — Coordenadas</title>
+<!--
+  HERMES AGENT ONBOARDING — coordenadas.co
+  ═════════════════════════════════════════
+  Submits responses to Google Sheets via Apps Script.
+  Replace APPS_SCRIPT_URL below with your deployed Web App URL.
+  ═════════════════════════════════════════
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0B0A08;--surface:#161411;--input:#1C1916;
+  --bdr:#2A2520;--bdr-ho:#403B35;
+  --acc:#D4A843;--acc-ho:#E8BC58;--acc-dim:rgba(212,168,67,.10);--acc-dim2:rgba(212,168,67,.05);
+  --txt:#EAE6DF;--txt2:#7A7570;--txt3:#403D39;
+  --r:5px;--ease:200ms ease
+}
+html{height:100%}
+body{background:var(--bg);color:var(--txt);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;min-height:100%}
+body::before{content:'';position:fixed;top:-300px;right:-300px;width:700px;height:700px;background:radial-gradient(circle,rgba(212,168,67,.05) 0%,transparent 65%);pointer-events:none;z-index:0}
+
+/* Progress */
+.prog-track{position:fixed;top:0;left:0;right:0;height:2px;background:var(--bdr);z-index:200}
+.prog-fill{height:100%;background:var(--acc);transition:width 500ms cubic-bezier(.4,0,.2,1);width:12.5%}
+
+/* Header */
+header{position:fixed;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(11,10,8,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bdr);z-index:100}
+.brand{display:flex;align-items:center;gap:9px}
+.logo-mark{flex-shrink:0}
+.wordmark{font-family:'Syne',sans-serif;font-weight:800;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--txt)}
+.step-ctr{position:absolute;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--txt3);letter-spacing:.1em}
+.step-ctr em{color:var(--acc);font-style:normal}
+.lang-tgl{display:flex;align-items:center;gap:1px;background:var(--surface);border:1px solid var(--bdr);border-radius:4px;padding:3px}
+.lang-btn{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.07em;padding:3px 10px;border:none;background:transparent;color:var(--txt3);cursor:pointer;border-radius:2px;transition:var(--ease)}
+.lang-btn.active{background:var(--acc);color:#0B0A08}
+.lang-btn:not(.active):hover{color:var(--txt2)}
+
+/* Main */
+main{position:relative;z-index:1;max-width:620px;margin:0 auto;padding:110px 24px 80px}
+
+/* Steps */
+.step{display:none}
+.step.active{display:block;animation:stepIn 320ms cubic-bezier(.4,0,.2,1) forwards}
+@keyframes stepIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* Section header */
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.eyebrow::after{content:'';flex:1;height:1px;background:var(--bdr)}
+.sec-title{font-family:'Syne',sans-serif;font-weight:800;font-size:40px;line-height:1.05;color:var(--txt);margin-bottom:10px;letter-spacing:-.02em}
+.sec-sub{font-size:14px;font-weight:300;color:var(--txt2);margin-bottom:40px;max-width:460px;line-height:1.65}
+
+/* Field */
+.field{margin-bottom:24px}
+.field-head{display:flex;align-items:baseline;gap:10px;margin-bottom:9px}
+.fnum{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--acc);letter-spacing:.06em;flex-shrink:0;padding-top:2px}
+.flabel{font-size:13.5px;font-weight:500;color:var(--txt);line-height:1.45}
+.fopt{font-size:11px;color:var(--txt3);font-weight:400;margin-left:6px;font-family:'JetBrains Mono',monospace;letter-spacing:.06em}
+
+/* Inputs */
+input[type="text"],input[type="email"],input[type="number"],textarea{width:100%;background:var(--input);border:1px solid var(--bdr);border-radius:var(--r);color:var(--txt);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 14px;outline:none;transition:border-color var(--ease),box-shadow var(--ease);resize:vertical;line-height:1.6}
+input[type="text"]:focus,input[type="email"]:focus,input[type="number"]:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-dim)}
+input[type="text"]:hover:not(:focus),input[type="email"]:hover:not(:focus),input[type="number"]:hover:not(:focus),textarea:hover:not(:focus){border-color:var(--bdr-ho)}
+input::placeholder,textarea::placeholder{color:var(--txt3)}
+textarea{min-height:88px}
+input[type="number"]{-moz-appearance:textfield}
+input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
+
+/* Opt grid */
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.opt-grid.col1{grid-template-columns:1fr}
+.opt-grid.col3{grid-template-columns:1fr 1fr 1fr}
+.opt-item{display:flex;align-items:flex-start;gap:10px;background:var(--input);border:1px solid var(--bdr);border-radius:var(--r);padding:10px 13px;cursor:pointer;transition:border-color var(--ease),background var(--ease);user-select:none}
+.opt-item:hover{border-color:var(--bdr-ho)}
+.opt-item:has(input:checked){border-color:var(--acc);background:var(--acc-dim2)}
+.opt-item input[type="checkbox"],.opt-item input[type="radio"]{width:15px;height:15px;accent-color:var(--acc);flex-shrink:0;margin-top:2px;cursor:pointer}
+.opt-item span{font-size:13px;color:var(--txt2);line-height:1.4;transition:color var(--ease)}
+.opt-item:has(input:checked) span{color:var(--txt)}
+
+/* Other reveal */
+.other-reveal{display:none;margin-top:8px}
+.other-reveal.show{display:block}
+
+/* Personal projects reveal */
+.personal-reveal{display:none;margin-top:12px;padding:14px;background:var(--surface);border:1px solid var(--bdr);border-radius:var(--r)}
+.personal-reveal.show{display:block}
+.personal-reveal-label{font-size:12px;color:var(--txt2);margin-bottom:8px;font-style:italic}
+
+/* Nav */
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:20px;border-top:1px solid var(--bdr)}
+.btn{font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;padding:11px 26px;border-radius:var(--r);border:none;cursor:pointer;transition:all var(--ease);letter-spacing:.01em}
+.btn-primary{background:var(--acc);color:#0B0A08}
+.btn-primary:hover{background:var(--acc-ho);transform:translateY(-1px);box-shadow:0 4px 16px rgba(212,168,67,.25)}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{background:transparent;color:var(--txt2);border:1px solid var(--bdr)}
+.btn-ghost:hover{border-color:var(--bdr-ho);color:var(--txt)}
+.btn-invis{opacity:0;pointer-events:none}
+.opt-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3);border:1px solid var(--bdr);padding:3px 7px;border-radius:3px;vertical-align:middle;margin-left:10px;position:relative;top:-4px}
+
+/* Section divider */
+.sec-divider{height:1px;background:var(--bdr);margin:28px 0}
+
+/* Thank you */
+.thankyou{display:none;text-align:center;padding:80px 0;animation:stepIn 400ms ease forwards}
+.thankyou.show{display:block}
+.ty-glyph{font-family:'JetBrains Mono',monospace;font-size:32px;color:var(--acc);margin-bottom:28px;display:block}
+.ty-title{font-family:'Syne',sans-serif;font-weight:800;font-size:36px;margin-bottom:14px;letter-spacing:-.02em}
+.ty-body{font-size:14px;font-weight:300;color:var(--txt2);max-width:380px;margin:0 auto;line-height:1.7}
+
+/* Responsive */
+@media(max-width:520px){
+  header{padding:0 16px}
+  .sec-title{font-size:30px}
+  .opt-grid,.opt-grid.col3{grid-template-columns:1fr}
+   main{padding:96px 16px 60px}
+   .logo-mark{width:32px;height:32px}
+   .wordmark{font-size:10px;letter-spacing:.16em}
+}
+</style>
+</head>
+<body>
+
+<div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+
+<header>
+  <div class="brand">
+    <svg class="logo-mark" viewBox="100 100 1700 850" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#20C162" d="M1216.788,146.569c53.839,52.952 67.089,111.205 38.412,168.889c-39.596,79.651 -144.428,101.18 -210.076,41.001c-74.632,-68.42 -159.273,-99.379 -259.835,-76.683c-106.459,24.021 -188.698,115.652 -202.653,223.95c-14.726,114.279 41.396,221.384 143.798,274.432c98.026,50.778 217.623,34.966 299.312,-38.682c14.822,-13.366 30.905,-26.41 48.553,-35.364c59.189,-30.03 132.471,-11.157 170.426,42.007c38.319,53.675 32.699,126.619 -13.51,175.394c-159.575,168.423 -433.773,207.977 -642.93,92.743c-318.478,-175.461 -377.513,-608.559 -117.639,-862.983c204.103,-199.823 545.566,-201.974 746.142,-4.704"/>
+      <path fill="#FCCC09" d="M1612.401,544.177c-2.212,94.187 -80.59,170.105 -174.799,169.468c-50.781,-0.344 -96.389,-22.484 -127.934,-57.53c-36.904,-41.001 -90.039,-63.629 -145.203,-63.629l-9.954,0c-55.17,0 -108.305,22.635 -145.213,63.639c-31.545,35.049 -77.159,57.186 -127.95,57.52c-94.209,0.621 -172.584,-75.291 -174.789,-169.478c-2.292,-97.814 76.326,-177.815 173.619,-177.815c47.553,0 90.64,19.111 121.999,50.071c37.586,37.11 87.724,58.749 140.544,58.749l33.525,0c52.813,0 102.948,-21.629 140.531,-58.736c31.365,-30.966 74.465,-50.084 122.024,-50.084c97.296,0 175.895,80.008 173.6,177.825"/>
+    </svg>
+    <span class="wordmark">coordenadas.co</span>
+  </div>
+  <div class="step-ctr"><em id="stepNum">01</em>&thinsp;/&thinsp;08</div>
+  <div class="lang-tgl">
+    <button class="lang-btn active" id="btn-es" onclick="setLang('es')">ES</button>
+    <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
+</header>
+
+<main>
+<form id="form" method="POST" novalidate>
+
+<!-- ══ STEP 1 — TÚ ══ -->
+<div class="step active" data-step="1">
+  <div class="eyebrow" data-key="s1e">TÚ</div>
+  <h1 class="sec-title" data-key="s1h">Tú.</h1>
+  <p class="sec-sub" data-key="s1s">Cuéntanos quién eres, tu trayectoria y tu rol en el equipo.</p>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">01</span><span class="flabel" data-key="q01">Nombre completo</span></div>
+    <input type="text" name="nombre" id="nameInput" required data-ph="q01p" placeholder="Tu nombre completo">
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">02</span><span class="flabel" data-key="q02">Email de trabajo</span><span class="fopt" data-key="optl">opcional</span></div>
+    <input type="email" name="_replyto" data-ph="q02p" placeholder="tu@coordenadas.co">
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">03</span><span class="flabel" data-key="q03">Rol en Coordenadas</span></div>
+    <input type="text" name="rol" required data-ph="q03p" placeholder="Ej: Editor de video, Diseñador gráfico, Productor…">
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">04</span><span class="flabel" data-key="q04">Área(s) de trabajo principal</span></div>
+    <div class="opt-grid" id="g-areas"></div>
+    <div id="rv-areas" class="other-reveal">
+      <input type="text" name="area_otro" data-ph="otroph" placeholder="Especifica tu área…">
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">05</span><span class="flabel" data-key="q05">Edad</span></div>
+    <input type="number" name="edad" min="16" max="99" data-ph="q05p" placeholder="Tu edad" style="max-width:140px">
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">06</span><span class="flabel" data-key="q06">Trayectoria profesional</span></div>
+    <textarea name="trayectoria" data-ph="q06p" placeholder="¿De dónde vienes? ¿Cuál es tu background? ¿Qué has hecho antes de Coordenadas?"></textarea>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">07</span><span class="flabel" data-key="q07">¿Cuánto tiempo llevas en Coordenadas?</span></div>
+    <div class="opt-grid col1" id="g-tenure"></div>
+    <div id="rv-tenure" class="other-reveal">
+      <input type="text" name="tenure_otro" data-ph="otroph" placeholder="Especifica…">
+    </div>
+  </div>
+
+  <div class="nav">
+    <span class="btn btn-invis">—</span>
+    <button type="button" class="btn btn-primary" onclick="go(2)" data-key="bnxt">Continuar →</button>
+  </div>
+</div>
+
+<!-- ══ STEP 2 — TU TRABAJO ══ -->
+<div class="step" data-step="2">
+  <div class="eyebrow" data-key="s2e">TU TRABAJO</div>
+  <h1 class="sec-title" data-key="s2h">Tu trabajo.</h1>
+  <p class="sec-sub" data-key="s2s">Clientes, proyectos y herramientas que hacen parte de tu día a día.</p>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">08</span><span class="flabel" data-key="q08">¿Con cuáles de estos clientes o marcas trabajas actualmente?</span></div>
+    <div class="opt-grid" id="g-clients">
+      <label class="opt-item"><input type="checkbox" name="clientes" value="PayWise"><span>PayWise</span></label>
+      <label class="opt-item"><input type="checkbox" name="clientes" value="Home Solutions"><span>Home Solutions</span></label>
+      <label class="opt-item"><input type="checkbox" name="clientes" value="Factronics"><span>Factronics</span></label>
+      <label class="opt-item"><input type="checkbox" name="clientes" value="Goozone"><span>Goozone</span></label>
+      <label class="opt-item"><input type="checkbox" name="clientes" value="Sierra Nevada"><span>Sierra Nevada</span></label>
+      <label class="opt-item"><input type="checkbox" name="clientes" value="Walnos"><span>Walnos</span></label>
+      <label class="opt-item"><input type="checkbox" name="clientes" value="Frenzy Salon"><span>Frenzy Salon</span></label>
+      <label class="opt-item"><input type="checkbox" name="clientes" value="New Blossom"><span>New Blossom</span></label>
+      <label class="opt-item"><input type="checkbox" name="clientes" value="Beauty & Beach"><span>Beauty &amp; Beach</span></label>
+      <label class="opt-item"><input type="checkbox" name="clientes" value="Coordenadas.co"><span>Coordenadas.co</span></label>
+      <label class="opt-item"><input type="checkbox" name="clientes" value="Pacho Setas"><span>Pacho Setas</span></label>
+      <label class="opt-item"><input type="checkbox" name="clientes" value="Indicame"><span>Indicame</span></label>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">09</span><span class="flabel" data-key="q09">¿Cuáles son tus proyectos activos en este momento?</span></div>
+    <div class="opt-grid" id="g-projects">
+      <label class="opt-item"><input type="checkbox" name="proyectos" value="PayWise"><span>PayWise</span></label>
+      <label class="opt-item"><input type="checkbox" name="proyectos" value="Home Solutions"><span>Home Solutions</span></label>
+      <label class="opt-item"><input type="checkbox" name="proyectos" value="Factronics"><span>Factronics</span></label>
+      <label class="opt-item"><input type="checkbox" name="proyectos" value="Goozone"><span>Goozone</span></label>
+      <label class="opt-item"><input type="checkbox" name="proyectos" value="Sierra Nevada"><span>Sierra Nevada</span></label>
+      <label class="opt-item"><input type="checkbox" name="proyectos" value="Walnos"><span>Walnos</span></label>
+      <label class="opt-item"><input type="checkbox" name="proyectos" value="Frenzy Salon"><span>Frenzy Salon</span></label>
+      <label class="opt-item"><input type="checkbox" name="proyectos" value="New Blossom"><span>New Blossom</span></label>
+      <label class="opt-item"><input type="checkbox" name="proyectos" value="Beauty & Beach"><span>Beauty &amp; Beach</span></label>
+      <label class="opt-item"><input type="checkbox" name="proyectos" value="Coordenadas.co"><span>Coordenadas.co</span></label>
+      <label class="opt-item"><input type="checkbox" name="proyectos" value="Pacho Setas"><span>Pacho Setas</span></label>
+      <label class="opt-item"><input type="checkbox" name="proyectos" value="Indicame"><span>Indicame</span></label>
+      <label class="opt-item" style="grid-column:1/-1">
+        <input type="checkbox" name="proyectos" value="Proyectos personales" data-reveals="rv-personal">
+        <span data-key="personal_lbl">Proyectos personales</span>
+      </label>
+    </div>
+    <div id="rv-personal" class="personal-reveal">
+      <p class="personal-reveal-label" data-key="personal_hint">Nómbralos y descríbelos brevemente.</p>
+      <textarea name="proyectos_personales" data-ph="personal_ph" placeholder="Ej: Estoy desarrollando una app de edición, tengo un proyecto de fotografía personal…"></textarea>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">10</span><span class="flabel" data-key="q10">Describe una semana de trabajo típica</span></div>
+    <textarea name="semana_tipica" data-ph="q10p" placeholder="¿Cómo se ve tu semana día a día? ¿Qué tipo de tareas hacen parte de tu rutina?"></textarea>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">11</span><span class="flabel" data-key="q11">¿Qué herramientas usas a diario?</span></div>
+    <div class="opt-grid" id="g-tools"></div>
+    <div id="rv-tools" class="other-reveal">
+      <input type="text" name="tools_otro" data-ph="otroph" placeholder="Especifica la herramienta…">
+    </div>
+  </div>
+
+  <div class="nav">
+    <button type="button" class="btn btn-ghost" onclick="go(1)" data-key="bbck">← Atrás</button>
+    <button type="button" class="btn btn-primary" onclick="go(3)" data-key="bnxt">Continuar →</button>
+  </div>
+</div>
+
+<!-- ══ STEP 3 — PERFIL TÉCNICO ══ -->
+<div class="step" data-step="3">
+  <div class="eyebrow" data-key="s3e">PERFIL TÉCNICO</div>
+  <h1 class="sec-title" data-key="s3h">Tu relación con la tecnología.</h1>
+  <p class="sec-sub" data-key="s3s">Esto le ayuda al agente a entender cómo trabajas con herramientas digitales y cómo puede sugerirte mejoras realistas.</p>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">12</span><span class="flabel" data-key="q12">¿Qué sistema operativo usas principalmente?</span></div>
+    <div class="opt-grid" id="g-os"></div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">13</span><span class="flabel" data-key="q13">¿Cómo describirías tu nivel de comodidad con la tecnología?</span></div>
+    <div class="opt-grid col1" id="g-tech"></div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">14</span><span class="flabel" data-key="q14">¿Cuál es tu experiencia con herramientas de inteligencia artificial?</span></div>
+    <div class="opt-grid col1" id="g-ai"></div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">15</span><span class="flabel" data-key="q15">¿Usas la terminal / línea de comandos?</span></div>
+    <div class="opt-grid col1" id="g-terminal"></div>
+  </div>
+
+  <div class="nav">
+    <button type="button" class="btn btn-ghost" onclick="go(2)" data-key="bbck">← Atrás</button>
+    <button type="button" class="btn btn-primary" onclick="go(4)" data-key="bnxt">Continuar →</button>
+  </div>
+</div>
+
+<!-- ══ STEP 4 — LO QUE SE REPITE ══ -->
+<div class="step" data-step="4">
+  <div class="eyebrow" data-key="s4e">RECURRENCIA</div>
+  <h1 class="sec-title" data-key="s4h">Lo que se repite.</h1>
+  <p class="sec-sub" data-key="s4s">Aquí es donde el agente empieza a entender tus patrones de trabajo.</p>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">16</span><span class="flabel" data-key="q16">Tareas que haces todos los días sin falta</span></div>
+    <textarea name="tareas_diarias" data-ph="q16p" placeholder="Ej: revisar correos, actualizar tableros, reuniones de seguimiento…"></textarea>
+  </div>
+  <div class="field">
+    <div class="field-head"><span class="fnum">17</span><span class="flabel" data-key="q17">Tareas que haces cada semana</span></div>
+    <textarea name="tareas_semanales" data-ph="q17p" placeholder="Ej: entregar un corte, presentar avances a un cliente, reportes…"></textarea>
+  </div>
+  <div class="field">
+    <div class="field-head"><span class="fnum">18</span><span class="flabel" data-key="q18">Tareas que haces cada mes</span></div>
+    <textarea name="tareas_mensuales" data-ph="q18p" placeholder="Ej: plan de contenido, generación de imágenes, archivos…"></textarea>
+  </div>
+  <div class="field">
+    <div class="field-head"><span class="fnum">19</span><span class="flabel" data-key="q19">Procesos que se sienten repetitivos pero necesarios</span></div>
+    <textarea name="proc_repetitivos" data-ph="q19p" placeholder="Cosas que haces con frecuencia y que siguen el mismo patrón, aunque no siempre en la misma fecha."></textarea>
+  </div>
+
+  <div class="nav">
+    <button type="button" class="btn btn-ghost" onclick="go(3)" data-key="bbck">← Atrás</button>
+    <button type="button" class="btn btn-primary" onclick="go(5)" data-key="bnxt">Continuar →</button>
+  </div>
+</div>
+
+<!-- ══ STEP 5 — LO QUE CUESTA ══ -->
+<div class="step" data-step="5">
+  <div class="eyebrow" data-key="s5e">FRICCIÓN</div>
+  <h1 class="sec-title" data-key="s5h">Lo que cuesta.</h1>
+  <p class="sec-sub" data-key="s5s">Aquí definimos dónde tu agente puede generar más valor desde el primer día.</p>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">20</span><span class="flabel" data-key="q20">¿Qué tareas desearías no tener que hacer manualmente?</span></div>
+    <textarea name="automatizar" data-ph="q20p" placeholder="Tareas que consumen tiempo y que sientes que podrían ser más automáticas o eficientes."></textarea>
+  </div>
+  <div class="field">
+    <div class="field-head"><span class="fnum">21</span><span class="flabel" data-key="q21">¿Qué información buscas repetidamente?</span></div>
+    <textarea name="info_repetitiva" data-ph="q21p" placeholder="Ej: contraseñas, briefings, referencias visuales, estados de proyectos…"></textarea>
+  </div>
+  <div class="field">
+    <div class="field-head"><span class="fnum">22</span><span class="flabel" data-key="q22">¿Qué tiende a perderse o quedar sin hacer?</span></div>
+    <textarea name="se_pierde" data-ph="q22p" placeholder="Cosas que generalmente se retrasan o se olvidan en medio de la carga de trabajo."></textarea>
+  </div>
+
+  <div class="nav">
+    <button type="button" class="btn btn-ghost" onclick="go(4)" data-key="bbck">← Atrás</button>
+    <button type="button" class="btn btn-primary" onclick="go(6)" data-key="bnxt">Continuar →</button>
+  </div>
+</div>
+
+<!-- ══ STEP 6 — TU AGENTE: COMUNICACIÓN ══ -->
+<div class="step" data-step="6">
+  <div class="eyebrow" data-key="s6e">TU AGENTE — COMUNICACIÓN</div>
+  <h1 class="sec-title" data-key="s6h">Cómo quieres que te hable.</h1>
+  <p class="sec-sub" data-key="s6s">Definimos el estilo de comunicación de tu agente contigo.</p>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">23</span><span class="flabel" data-key="q23">Si estás retrasado en tareas, ¿cómo quieres que te lo diga tu agente?</span></div>
+    <div class="opt-grid col1" id="g-direct"></div>
+  </div>
+  <div class="field">
+    <div class="field-head"><span class="fnum">24</span><span class="flabel" data-key="q24">¿En qué idioma prefieres comunicarte con tu agente?</span></div>
+    <div class="opt-grid col1" id="g-lang"></div>
+  </div>
+  <div class="field">
+    <div class="field-head"><span class="fnum">25</span><span class="flabel" data-key="q25">¿Qué tan proactivo quieres que sea tu agente?</span></div>
+    <div class="opt-grid col1" id="g-proact"></div>
+  </div>
+  <div class="field">
+    <div class="field-head"><span class="fnum">26</span><span class="flabel" data-key="q26">¿Hay algo que tu agente NUNCA debería hacer?</span></div>
+    <textarea name="nunca" data-ph="q26p" placeholder="Ej: mandarme notificaciones innecesarias, darme respuestas largas cuando solo necesito un dato…"></textarea>
+  </div>
+
+  <div class="nav">
+    <button type="button" class="btn btn-ghost" onclick="go(5)" data-key="bbck">← Atrás</button>
+    <button type="button" class="btn btn-primary" onclick="go(7)" data-key="bnxt">Continuar →</button>
+  </div>
+</div>
+
+<!-- ══ STEP 7 — TU AGENTE: PERSONALIZACIÓN ══ -->
+<div class="step" data-step="7">
+  <div class="eyebrow" data-key="s7e">TU AGENTE — PERSONALIZACIÓN</div>
+  <h1 class="sec-title" data-key="s7h">Quién es tu agente.</h1>
+  <p class="sec-sub" data-key="s7s">Define la identidad, personalidad y carácter de tu agente personal.</p>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">27</span><span class="flabel" data-key="q27">¿Cómo se llama tu agente?</span></div>
+    <input type="text" name="agente_nombre" required data-ph="q27p" placeholder="Elige el nombre que quieras darle">
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">28</span><span class="flabel" data-key="q28">¿Cómo percibes la voz de tu agente?</span></div>
+    <div class="opt-grid" id="g-gender"></div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">29</span><span class="flabel" data-key="q29">¿Qué arquetipo de personalidad encaja mejor?</span></div>
+    <div class="opt-grid col1" id="g-arch"></div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">30</span><span class="flabel" data-key="q30">¿Qué nivel de humor quieres en tu agente?</span></div>
+    <div class="opt-grid col1" id="g-humor"></div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">31</span><span class="flabel" data-key="q31">¿Cómo quieres que tu agente te llame?</span></div>
+    <div class="opt-grid col1" id="g-address"></div>
+    <div id="rv-nickname" class="other-reveal">
+      <input type="text" name="apodo" data-ph="nickph" placeholder="¿Cuál es tu apodo?">
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">32</span><span class="flabel" data-key="q32">Longitud de respuestas por defecto</span></div>
+    <div class="opt-grid col1" id="g-reslen"></div>
+  </div>
+
+  <div class="nav">
+    <button type="button" class="btn btn-ghost" onclick="go(6)" data-key="bbck">← Atrás</button>
+    <button type="button" class="btn btn-primary" onclick="go(8)" data-key="bnxt">Continuar →</button>
+  </div>
+</div>
+
+<!-- ══ STEP 8 — CRECIMIENTO ══ -->
+<div class="step" data-step="8">
+  <div class="eyebrow" data-key="s8e">CRECIMIENTO</div>
+  <h1 class="sec-title"><span data-key="s8h">Hacia dónde vas.</span><span class="opt-tag" data-key="optl2">opcional</span></h1>
+  <p class="sec-sub" data-key="s8s">Esta sección es opcional, pero ayuda a que tu agente pueda acompañar tu desarrollo a largo plazo.</p>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">33</span><span class="flabel" data-key="q33">¿Qué habilidades estás desarrollando actualmente?</span></div>
+    <textarea name="habilidades" data-ph="q33p" placeholder="Herramientas, técnicas, soft skills, idiomas — lo que estés trabajando en este momento."></textarea>
+  </div>
+  <div class="field">
+    <div class="field-head"><span class="fnum">34</span><span class="flabel" data-key="q34">¿Qué quieres aprender o mejorar en los próximos 6 meses?</span></div>
+    <textarea name="aprendizaje" data-ph="q34p" placeholder="No tiene que ser algo formal — puede ser cualquier cosa que quieras dominar o explorar."></textarea>
+  </div>
+  <div class="field">
+    <div class="field-head"><span class="fnum">35</span><span class="flabel" data-key="q35">¿Cómo quieres que tu agente apoye tu crecimiento?</span></div>
+    <textarea name="apoyo" data-ph="q35p" placeholder="Ej: recordarme practicar algo, hacerme seguimiento de un objetivo, sugerirme recursos…"></textarea>
+  </div>
+
+  <div class="nav">
+    <button type="button" class="btn btn-ghost" onclick="go(7)" data-key="bbck">← Atrás</button>
+    <button type="submit" class="btn btn-primary" id="submitBtn" data-key="bsub">Enviar respuestas →</button>
+  </div>
+</div>
+
+</form>
+
+<div class="thankyou" id="thankyou">
+  <span class="ty-glyph">◈</span>
+  <h2 class="ty-title" data-key="tyh">Listo.</h2>
+  <p class="ty-body" data-key="typ">Tus respuestas han sido enviadas. Diego las revisará y comenzará a construir tu agente personal.</p>
+</div>
+</main>
+
+<script>
+const T={
+es:{
+  s1e:"TÚ",s1h:"Tú.",s1s:"Cuéntanos quién eres, tu trayectoria y tu rol en el equipo.",
+  s2e:"TU TRABAJO",s2h:"Tu trabajo.",s2s:"Clientes, proyectos y herramientas que hacen parte de tu día a día.",
+  s3e:"PERFIL TÉCNICO",s3h:"Tu relación con la tecnología.",s3s:"Esto le ayuda al agente a entender cómo trabajas con herramientas digitales y cómo puede sugerirte mejoras realistas.",
+  s4e:"RECURRENCIA",s4h:"Lo que se repite.",s4s:"Aquí es donde el agente empieza a entender tus patrones de trabajo.",
+  s5e:"FRICCIÓN",s5h:"Lo que cuesta.",s5s:"Aquí definimos dónde tu agente puede generar más valor desde el primer día.",
+  s6e:"TU AGENTE — COMUNICACIÓN",s6h:"Cómo quieres que te hable.",s6s:"Definimos el estilo de comunicación de tu agente contigo.",
+  s7e:"TU AGENTE — PERSONALIZACIÓN",s7h:"Quién es tu agente.",s7s:"Define la identidad, personalidad y carácter de tu agente personal.",
+  s8e:"CRECIMIENTO",s8h:"Hacia dónde vas.",s8s:"Esta sección es opcional, pero ayuda a que tu agente pueda acompañar tu desarrollo a largo plazo.",
+  q01:"Nombre completo",q01p:"Tu nombre completo",
+  q02:"Email de trabajo",q02p:"tu@coordenadas.co",
+  q03:"Rol en Coordenadas",q03p:"Ej: Editor de video, Diseñador gráfico, Productor…",
+  q04:"Área(s) de trabajo principal",
+  q05:"Edad",q05p:"Tu edad",
+  q06:"Trayectoria profesional",q06p:"¿De dónde vienes? ¿Cuál es tu background? ¿Qué has hecho antes de Coordenadas?",
+  q07:"¿Cuánto tiempo llevas en Coordenadas?",
+  q08:"¿Con cuáles de estos clientes o marcas trabajas actualmente?",
+  q09:"¿Cuáles son tus proyectos activos en este momento?",
+  q10:"Describe una semana de trabajo típica",q10p:"¿Cómo se ve tu semana día a día? ¿Qué tipo de tareas hacen parte de tu rutina?",
+  q11:"¿Qué herramientas usas a diario?",
+  q12:"¿Qué sistema operativo usas principalmente?",
+  q13:"¿Cómo describirías tu nivel de comodidad con la tecnología?",
+  q14:"¿Cuál es tu experiencia con herramientas de inteligencia artificial?",
+  q15:"¿Usas la terminal / línea de comandos?",
+  q16:"Tareas que haces todos los días sin falta",q16p:"Ej: revisar correos, actualizar tableros, reuniones de seguimiento…",
+  q17:"Tareas que haces cada semana",q17p:"Ej: entregar un corte, presentar avances a un cliente, reportes…",
+  q18:"Tareas que haces cada mes",q18p:"Ej: plan de contenido, generación de imágenes, archivos…",
+  q19:"Procesos que se sienten repetitivos pero necesarios",q19p:"Cosas que haces con frecuencia y que siguen el mismo patrón, aunque no siempre en la misma fecha.",
+  q20:"¿Qué tareas desearías no tener que hacer manualmente?",q20p:"Tareas que consumen tiempo y que sientes que podrían ser más automáticas o eficientes.",
+  q21:"¿Qué información buscas repetidamente?",q21p:"Ej: contraseñas, briefings, referencias visuales, estados de proyectos…",
+  q22:"¿Qué tiende a perderse o quedar sin hacer?",q22p:"Cosas que generalmente se retrasan o se olvidan en medio de la carga de trabajo.",
+  q23:"Si estás retrasado en tareas, ¿cómo quieres que te lo diga tu agente?",
+  q24:"¿En qué idioma prefieres comunicarte con tu agente?",
+  q25:"¿Qué tan proactivo quieres que sea tu agente?",
+  q26:"¿Hay algo que tu agente NUNCA debería hacer?",q26p:"Ej: mandarme notificaciones innecesarias, darme respuestas largas cuando solo necesito un dato…",
+  q27:"¿Cómo se llama tu agente?",q27p:"Elige el nombre que quieras darle",
+  q28:"¿Cómo percibes la voz de tu agente?",
+  q29:"¿Qué arquetipo de personalidad encaja mejor?",
+  q30:"¿Qué nivel de humor quieres en tu agente?",
+  q31:"¿Cómo quieres que tu agente te llame?",
+  q32:"Longitud de respuestas por defecto",
+  q33:"¿Qué habilidades estás desarrollando actualmente?",q33p:"Herramientas, técnicas, soft skills, idiomas — lo que estés trabajando en este momento.",
+  q34:"¿Qué quieres aprender o mejorar en los próximos 6 meses?",q34p:"No tiene que ser algo formal — puede ser cualquier cosa que quieras dominar o explorar.",
+  q35:"¿Cómo quieres que tu agente apoye tu crecimiento?",q35p:"Ej: recordarme practicar algo, hacerme seguimiento de un objetivo, sugerirme recursos…",
+  optl:"opcional",optl2:"opcional",
+  otroph:"Especifica…",nickph:"¿Cuál es tu apodo?",
+  personal_lbl:"Proyectos personales",personal_hint:"Nómbralos y descríbelos brevemente.",personal_ph:"Ej: Estoy desarrollando una app, tengo un proyecto de fotografía personal…",
+  bnxt:"Continuar →",bbck:"← Atrás",bsub:"Enviar respuestas →",
+  tyh:"Listo.",typ:"Tus respuestas han sido enviadas. Diego las revisará y comenzará a construir tu agente personal.",
+  sending:"Enviando…",err:"Error — intenta de nuevo",
+  ty_messages:["Tu agente se está cocinando, se vienen cositas™","NPC convertido en protagonista.","Achievement unlocked: Primer empleado que no pide café.","Tu agente ya está haciendo estiramientos.","Las máquinas han tomado nota. No te preocupes… todavía."],
+  areas:["Edición de Video","Motion Graphics / VFX","Diseño Gráfico","Contenido para Redes","Dirección Creativa","Estrategia / Planeación","Gestión de Proyectos","Administración / Operaciones"],
+  tenure:["Menos de 6 meses","6 a 12 meses","1 a 2 años","Más de 2 años"],
+  tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / código"],
+  os:["Windows","macOS","Ambos","Mobile (principalmente)"],
+  tech:["Básico — uso lo que me piden y ya","Intermedio — exploro herramientas cuando me las recomiendan","Avanzado — aprendo herramientas nuevas activamente","Experto — configuro sistemas, puedo escribir código o scripts"],
+  ai_exp:["Nunca las he usado","Las uso ocasionalmente","Las uso todos los días","Las uso y también las integro en mis flujos de trabajo"],
+  terminal:["Sí, con comodidad","No, nunca la uso","Un poco — sé los básicos","No, pero me interesa aprender"],
+  direct:["Muy directo — dímelo de frente, sin rodeos","Equilibrado — avísame, pero sin presionar","Suave — espera a que yo pregunte"],
+  langs:["Español","Inglés","Los dos — uso el que se me ocurra"],
+  proact:["Muy proactivo — mándame recordatorios con frecuencia","Reactivo — solo cuando yo le pregunte","Intermedio — solo cuando algo es urgente o se está acumulando"],
+  gender:["Masculina","Femenina","Neutral / Sin preferencia"],
+  arch:["El Estratega — analítico, planificador, orientado a resultados","El Creativo — generativo, pensamiento lateral, lleno de ideas","El Coach — motivador, orientado al crecimiento, te empuja a avanzar","El Ejecutor — acción primero, conciso, sin rodeos","El Compañero — colaborativo, conversacional, cálido"],
+  humor:["Sin humor — serio y profesional","Algo de humor cuando el momento lo permite","Bienvenido el banter — quiero que sea divertido"],
+  address:["Mi nombre de pila","Mi apodo — lo especifico abajo","Sin preferencia"],
+  reslen:["Siempre corto y directo — menos es más","Detallado cuando el tema lo requiere","Que coincida con el tono de mi mensaje"]
+},
+en:{
+  s1e:"YOU",s1h:"You.",s1s:"Tell us who you are, your background, and your role on the team.",
+  s2e:"YOUR WORK",s2h:"Your work.",s2s:"Clients, projects, and tools that are part of your daily life.",
+  s3e:"TECH PROFILE",s3h:"Your relationship with technology.",s3s:"This helps the agent understand how you work with digital tools and how it can suggest realistic improvements.",
+  s4e:"RECURRING TASKS",s4h:"What repeats.",s4s:"This is where the agent starts to understand your work patterns.",
+  s5e:"FRICTION",s5h:"What costs you.",s5s:"Here we define where your agent can generate the most value from day one.",
+  s6e:"YOUR AGENT — COMMUNICATION",s6h:"How you want it to talk to you.",s6s:"We define your agent's communication style with you.",
+  s7e:"YOUR AGENT — PERSONALITY",s7h:"Who your agent is.",s7s:"Define the identity, personality, and character of your personal agent.",
+  s8e:"GROWTH",s8h:"Where you're headed.",s8s:"This section is optional, but helps your agent support your development long-term.",
+  q01:"Full name",q01p:"Your full name",
+  q02:"Work email",q02p:"you@coordenadas.co",
+  q03:"Role at Coordenadas",q03p:"e.g. Video Editor, Graphic Designer, Producer…",
+  q04:"Main area(s) of work",
+  q05:"Age",q05p:"Your age",
+  q06:"Professional background",q06p:"Where do you come from? What's your background? What did you do before Coordenadas?",
+  q07:"How long have you been with Coordenadas?",
+  q08:"Which of these clients or brands do you currently work with?",
+  q09:"What are your active projects right now?",
+  q10:"Describe a typical work week",q10p:"What does your week look like day to day? What kinds of tasks are part of your routine?",
+  q11:"What tools do you use daily?",
+  q12:"What operating system do you mainly use?",
+  q13:"How would you describe your comfort level with technology?",
+  q14:"What is your experience with artificial intelligence tools?",
+  q15:"Do you use the terminal / command line?",
+  q16:"Tasks you do every single day",q16p:"e.g. checking emails, updating boards, status meetings…",
+  q17:"Tasks you do every week",q17p:"e.g. delivering a cut, presenting progress to a client, reports…",
+  q18:"Tasks you do every month",q18p:"e.g. content plan, generating images, archiving files…",
+  q19:"Processes that feel repetitive but necessary",q19p:"Things you do frequently that follow the same pattern, even if not always on the same date.",
+  q20:"What tasks do you wish you didn't have to do manually?",q20p:"Tasks that consume time and feel like they could be more automatic or efficient.",
+  q21:"What information do you find yourself searching for repeatedly?",q21p:"e.g. passwords, briefs, visual references, project statuses…",
+  q22:"What tends to fall through the cracks?",q22p:"Things that get delayed or forgotten in the middle of a heavy workload.",
+  q23:"If you're behind on tasks or deadlines, how do you want your agent to tell you?",
+  q24:"What language do you prefer to use with your agent?",
+  q25:"How proactive do you want your agent to be?",
+  q26:"Is there anything your agent should NEVER do?",q26p:"e.g. interrupt me with unnecessary notifications, give long answers when I just need a quick fact…",
+  q27:"What is your agent's name?",q27p:"Choose any name you want to give it",
+  q28:"How do you perceive your agent's voice?",
+  q29:"Which personality archetype fits best?",
+  q30:"What level of humor do you want from your agent?",
+  q31:"How do you want your agent to address you?",
+  q32:"Default response length",
+  q33:"What skills are you currently developing?",q33p:"Tools, techniques, soft skills, languages — anything you're actively working on.",
+  q34:"What do you want to learn or improve in the next 6 months?",q34p:"It doesn't have to be formal — just anything you want to master or explore.",
+  q35:"How would you want your agent to support your growth?",q35p:"e.g. remind me to practice something, track a goal, suggest resources when relevant…",
+  optl:"optional",optl2:"optional",
+  otroph:"Specify…",nickph:"What's your nickname?",
+  personal_lbl:"Personal projects",personal_hint:"Name them and describe them briefly.",personal_ph:"e.g. I'm building an app, I have a personal photography project…",
+  bnxt:"Continue →",bbck:"← Back",bsub:"Submit responses →",
+  tyh:"Done.",typ:"Your responses have been sent. Diego will review them and start building your personal agent.",
+  sending:"Sending…",err:"Error — try again",
+  ty_messages:["Your agent is cooking.","NPC promoted to main character.","Achievement unlocked: First employee who doesn't need coffee.","Born to automate. Forced to fill forms.","We got your agent before GTA VI.","Your agent is warming up.","The machines have received your request. Don't panic… yet."],
+  areas:["Video Editing / Production","Motion Graphics / VFX","Graphic Design","Social Media Content","Creative Direction","Strategy / Planning","Project Management","Admin / Operations"],
+  tenure:["Less than 6 months","6 to 12 months","1 to 2 years","More than 2 years"],
+  tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / code"],
+  os:["Windows","macOS","Both","Mobile (mainly)"],
+  tech:["Basic — I use what I'm told and that's it","Intermediate — I explore tools when recommended","Advanced — I actively learn new tools","Expert — I configure systems, can write code or scripts"],
+  ai_exp:["Never used them","Occasionally","Every day","I use them and integrate them into my workflows"],
+  terminal:["Yes, comfortably","No, never","A little — I know the basics","No, but I'd like to learn"],
+  direct:["Very direct — call it out immediately, no sugarcoating","Balanced — let me know, but without pressure","Gentle — wait until I ask"],
+  langs:["Spanish","English","Both — I'll use whichever I feel like"],
+  proact:["Very proactive — nudge me regularly","Reactive — only when I ask","In between — only when something is urgent or piling up"],
+  gender:["Masculine","Feminine","Neutral / No preference"],
+  arch:["The Strategist — analytical, planning-focused, results-driven","The Creative — generative, lateral thinking, full of ideas","The Coach — motivating, growth-oriented, pushes you forward","The Executor — action-first, concise, no-nonsense","The Partner — collaborative, conversational, warm"],
+  humor:["No humor — serious and professional","Light humor when the moment calls for it","Bring the banter — I want it fun"],
+  address:["My first name","My nickname — I'll specify below","No preference"],
+  reslen:["Always short and direct — less is more","Detailed when the topic calls for it","Match the tone of my message"]
+}};
+
+let lang="es",step=1;
+const TOTAL=8;
+
+// Build grids
+function buildGrid(id,optKey,name,type,revealId){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const opts=T[lang][optKey];
+  let html=opts.map((o,i)=>`<label class="opt-item"><input type="${type}" name="${name}" value="${o}" data-gid="${id}" data-idx="${i}"><span data-gid="${id}" data-idx="${i}">${o}</span></label>`).join("");
+  // Other option
+  if(revealId){
+    const lbl=lang==="es"?"Otro":"Other";
+    html+=`<label class="opt-item"><input type="${type}" name="${name}" value="Otro" data-reveals="${revealId}" data-gid="${id}" data-idx="other"><span data-gid="${id}" data-idx="other">${lbl}</span></label>`;
+  }
+  el.innerHTML=html;
+}
+
+function buildAllGrids(){
+  buildGrid("g-areas","areas","area_trabajo","checkbox","rv-areas");
+  buildGrid("g-tenure","tenure","tiempo_coord","radio","rv-tenure");
+  buildGrid("g-tools","tools","herramientas","checkbox","rv-tools");
+  buildGrid("g-os","os","sistema_op","checkbox",null);
+  buildGrid("g-tech","tech","nivel_tech","radio",null);
+  buildGrid("g-ai","ai_exp","exp_ai","radio",null);
+  buildGrid("g-terminal","terminal","usa_terminal","radio",null);
+  buildGrid("g-direct","direct","directividad","radio",null);
+  buildGrid("g-lang","langs","idioma","radio",null);
+  buildGrid("g-proact","proact","proactividad","radio",null);
+  buildGrid("g-gender","gender","agente_genero","radio",null);
+  buildGrid("g-arch","arch","agente_arquetipo","radio",null);
+  buildGrid("g-humor","humor","agente_humor","radio",null);
+  buildGrid("g-address","address","agente_trato","radio","rv-nickname");
+  buildGrid("g-reslen","reslen","agente_reslen","radio",null);
+}
+
+// Language
+function setLang(l){
+  lang=l;
+  document.documentElement.lang=l;
+  document.getElementById("btn-es").classList.toggle("active",l==="es");
+  document.getElementById("btn-en").classList.toggle("active",l==="en");
+  const t=T[l];
+  document.querySelectorAll("[data-key]").forEach(el=>{const k=el.dataset.key;if(t[k]!==undefined)el.textContent=t[k];});
+  // Re-pick random ty message if thankyou is visible
+  if(document.getElementById("thankyou").classList.contains("show")){
+    document.querySelector(".ty-body").textContent=pickTyMessage();
+  }
+  document.querySelectorAll("[data-ph]").forEach(el=>{const k=el.dataset.ph;if(t[k]!==undefined)el.placeholder=t[k];});
+  // Rebuild grids to get translated options
+  buildAllGrids();
+  // Restore "Other" reveals that were open
+  document.querySelectorAll(".other-reveal.show,.personal-reveal.show").forEach(el=>{
+    // keep open — user had interacted
+  });
+  // Update "Other" labels that are now inside rebuilt grids
+  // (already handled by rebuild)
+}
+
+// Navigation
+function go(n){
+  document.querySelector(`.step[data-step="${step}"]`).classList.remove("active");
+  step=n;
+  const next=document.querySelector(`.step[data-step="${n}"]`);
+  next.style.animation="none";next.offsetHeight;next.style.animation="";
+  next.classList.add("active");
+  document.getElementById("progFill").style.width=((step/TOTAL)*100)+"%";
+  document.getElementById("stepNum").textContent=String(step).padStart(2,"0");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+// Other reveals
+document.addEventListener("change",function(e){
+  const inp=e.target;
+  const revId=inp.dataset.reveals;
+  if(revId){
+    const rev=document.getElementById(revId);
+    if(!rev)return;
+    // For personal projects, use personal-reveal class
+    if(inp.type==="checkbox"){
+      rev.classList.toggle("show",inp.checked);
+    } else if(inp.type==="radio"){
+      // Hide all reveals for this radio group first
+      document.querySelectorAll(`input[type="radio"][name="${inp.name}"]`).forEach(r=>{
+        if(r.dataset.reveals){
+          const rv=document.getElementById(r.dataset.reveals);
+          if(rv)rv.classList.remove("show");
+        }
+      });
+      rev.classList.add("show");
+    }
+  } else if(inp.type==="radio"){
+    // Selecting a radio without reveal — hide any reveal in same group
+    document.querySelectorAll(`input[type="radio"][name="${inp.name}"][data-reveals]`).forEach(r=>{
+      const rv=document.getElementById(r.dataset.reveals);
+      if(rv)rv.classList.remove("show");
+    });
+  }
+});
+
+// Apps Script endpoint — UPDATE THIS after deploying
+const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_URL_HERE";
+
+// Collect all form data into a flat object
+function collectFormData(){
+  const data={
+    fuente:"Discovery",
+    lang:lang,
+    submissionId:crypto.randomUUID(),
+    nombre:document.querySelector('[name="nombre"]')?.value||"",
+    _replyto:document.querySelector('[name="_replyto"]')?.value||"",
+    rol:document.querySelector('[name="rol"]')?.value||"",
+    area_trabajo:"",
+    area_otro:document.querySelector('[name="area_otro"]')?.value||"",
+    edad:document.querySelector('[name="edad"]')?.value||"",
+    trayectoria:document.querySelector('[name="trayectoria"]')?.value||"",
+    tiempo_coord:"",
+    tenure_otro:document.querySelector('[name="tenure_otro"]')?.value||"",
+    clientes:"",
+    proyectos:"",
+    proyectos_personales:document.querySelector('[name="proyectos_personales"]')?.value||"",
+    semana_tipica:document.querySelector('[name="semana_tipica"]')?.value||"",
+    herramientas:"",
+    tools_otro:document.querySelector('[name="tools_otro"]')?.value||"",
+    sistema_op:"",
+    nivel_tech:"",
+    exp_ai:"",
+    usa_terminal:"",
+    tareas_diarias:document.querySelector('[name="tareas_diarias"]')?.value||"",
+    tareas_semanales:document.querySelector('[name="tareas_semanales"]')?.value||"",
+    tareas_mensuales:document.querySelector('[name="tareas_mensuales"]')?.value||"",
+    proc_repetitivos:document.querySelector('[name="proc_repetitivos"]')?.value||"",
+    automatizar:document.querySelector('[name="automatizar"]')?.value||"",
+    info_repetitiva:document.querySelector('[name="info_repetitiva"]')?.value||"",
+    se_pierde:document.querySelector('[name="se_pierde"]')?.value||"",
+    directividad:"",
+    idioma:"",
+    proactividad:"",
+    nunca:document.querySelector('[name="nunca"]')?.value||"",
+    agente_nombre:document.querySelector('[name="agente_nombre"]')?.value||"",
+    agente_genero:"",
+    agente_arquetipo:"",
+    agente_humor:"",
+    agente_trato:"",
+    apodo:document.querySelector('[name="apodo"]')?.value||"",
+    agente_reslen:"",
+    habilidades:document.querySelector('[name="habilidades"]')?.value||"",
+    aprendizaje:document.querySelector('[name="aprendizaje"]')?.value||"",
+    apoyo:document.querySelector('[name="apoyo"]')?.value||""
+  };
+  // Collect checkbox grids (comma-separated, merge "Other" values)
+  const grids=[
+    {name:"area_trabajo",names:"area_trabajo",reveal:"area_otro",revealEl:document.querySelector('[name="area_otro"]')},
+    {name:"clientes",names:"clientes",reveal:null,revealEl:null},
+    {name:"proyectos",names:"proyectos",reveal:null,revealEl:null},
+    {name:"herramientas",names:"herramientas",reveal:"tools_otro",revealEl:document.querySelector('[name="tools_otro"]')}
+  ];
+  for(const g of grids){
+    const checked=[...document.querySelectorAll(`[name="${g.names}"]:checked`)].map(cb=>cb.value);
+    if(g.reveal&&g.revealEl&&g.revealEl.value){
+      const idx=checked.indexOf("Otro");
+      if(idx!==-1)checked[idx]="Otro: "+g.revealEl.value;
+    }
+    data[g.name]=checked.join(", ");
+  }
+  // Collect radio groups (single select)
+  const radios=["tiempo_coord","sistema_op","nivel_tech","exp_ai","usa_terminal","directividad","idioma","proactividad","agente_genero","agente_arquetipo","agente_humor","agente_trato","agente_reslen"];
+  for(const name of radios){
+    const el=document.querySelector(`[name="${name}"]:checked`);
+    data[name]=el?el.value:"";
+  }
+  return data;
+}
+
+// Pick a random thank-you message
+function pickTyMessage(){
+  const msgs=T[lang].ty_messages;
+  return msgs[Math.floor(Math.random()*msgs.length)];
+}
+
+// Submit
+document.getElementById("form").addEventListener("submit",async function(e){
+  e.preventDefault();
+  const btn=document.getElementById("submitBtn");
+  btn.textContent=T[lang].sending;btn.disabled=true;
+  const data=collectFormData();
+  try{
+    const res=await fetch(APPS_SCRIPT_URL,{method:"POST",body:JSON.stringify(data)});
+    const json=await res.json();
+    if(json.success){
+      this.style.display="none";
+      document.querySelector(".ty-body").textContent=pickTyMessage();
+      document.getElementById("thankyou").classList.add("show");
+      document.getElementById("progFill").style.width="100%";
+    }else{btn.textContent=T[lang].err;btn.disabled=false;}
+  }catch{btn.textContent=T[lang].err;btn.disabled=false;}
+});
+
+// Init
+buildAllGrids();
+setLang("es");
+</script>
+</body>
+</html>
