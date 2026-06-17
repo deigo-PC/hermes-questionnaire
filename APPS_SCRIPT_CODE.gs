@@ -46,15 +46,12 @@ function doGet(e) {
 }
 
 function extractKey(header) {
-  const cleaned = header.toString().replace(/[\r\n]+/g, " ");
-  var last = null;
-  var regex = /\(([^)]+)\)/g;
-  var m;
-  while ((m = regex.exec(cleaned)) !== null) {
-    last = m[1];
+  const cleaned = header.toString().replace(/[\r\n]+/g, " ").toLowerCase();
+  var fields = ["nombre","_replyto","rol","area_trabajo","area_otro","edad","trayectoria","tiempo_coord","tenure_otro","clientes","proyectos","proyectos_personales","semana_tipica","herramientas","tools_otro","sistema_op","sistema_op_otro","nivel_tech","exp_ai","usa_terminal","tareas_diarias","tareas_semanales","tareas_mensuales","proc_repetitivos","automatizar","info_repetitiva","se_pierde","directividad","idioma","proactividad","nunca","agente_nombre","agente_nombre_razon","agente_genero","agente_arquetipo","agente_humor","agente_trato","apodo","agente_reslen","habilidades","aprendizaje","apoyo"];
+  for (var i = 0; i < fields.length; i++) {
+    if (cleaned.indexOf("(" + fields[i] + ")") !== -1) return fields[i];
   }
-  if (last) return last.toLowerCase();
-  const lower = cleaned.toLowerCase();
-  if (lower === "timestamp") return "timestamp";
+  var lower = cleaned.toLowerCase();
+  if (lower.indexOf("timestamp") !== -1) return "timestamp";
   return lower;
 }
