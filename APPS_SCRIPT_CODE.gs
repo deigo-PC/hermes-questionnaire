@@ -46,7 +46,7 @@ function doGet(e) {
 }
 
 function extractKey(header) {
-  const cleaned = header.toString().replace(/\n/g, " ");
+  const cleaned = header.toString().replace(/[\r\n]+/g, " ");
   const match = cleaned.match(/.*\(([^)]+)\)/);
   if (match) return match[1].toLowerCase();
   const lower = cleaned.toLowerCase();
