@@ -730,7 +730,7 @@ function collectFormData(){
   const data={
     fuente:"Discovery",
     lang:lang,
-    submissionId:crypto.randomUUID(),
+    submissionId:(typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():"id-"+Date.now()+"-"+Math.random().toString(36).slice(2,9),
     nombre:document.querySelector('[name="nombre"]')?.value||"",
     _replyto:document.querySelector('[name="_replyto"]')?.value||"",
     rol:document.querySelector('[name="rol"]')?.value||"",
