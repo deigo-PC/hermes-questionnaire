@@ -221,6 +221,10 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
       <label class="opt-item"><input type="checkbox" name="clientes" value="Coordenadas.co"><span>Coordenadas.co</span></label>
       <label class="opt-item"><input type="checkbox" name="clientes" value="Pacho Setas"><span>Pacho Setas</span></label>
       <label class="opt-item"><input type="checkbox" name="clientes" value="Indicame"><span>Indicame</span></label>
+      <label class="opt-item" style="grid-column:1/-1;border-color:var(--acc);background:var(--acc-dim2)">
+        <input type="checkbox" data-selectall="clientes">
+        <span data-key="q08_all">Todos los anteriores</span>
+      </label>
     </div>
   </div>
 
@@ -275,10 +279,13 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
   <h1 class="sec-title" data-key="s3h">Tu relación con la tecnología.</h1>
   <p class="sec-sub" data-key="s3s">Esto le ayuda al agente a entender cómo trabajas con herramientas digitales y cómo puede sugerirte mejoras realistas.</p>
 
-  <div class="field">
-    <div class="field-head"><span class="fnum">12</span><span class="flabel" data-key="q12">¿Qué sistema operativo usas principalmente?</span></div>
-    <div class="opt-grid" id="g-os"></div>
-  </div>
+    <div class="field">
+      <div class="field-head"><span class="fnum">12</span><span class="flabel" data-key="q12">¿Qué sistema operativo usas principalmente?</span></div>
+      <div class="opt-grid" id="g-os"></div>
+      <div id="rv-os" class="other-reveal">
+        <input type="text" name="sistema_op_otro" data-ph="otroph_os" placeholder="¿Cuál sistema operativo?">
+      </div>
+    </div>
 
   <div class="field">
     <div class="field-head"><span class="fnum">13</span><span class="flabel" data-key="q13">¿Cómo describirías tu nivel de comodidad con la tecnología?</span></div>
@@ -396,6 +403,11 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
 
   <div class="field">
+    <div class="field-head"><span class="fnum">27b</span><span class="flabel" data-key="q27b">¿Por qué este nombre?</span><span class="fopt" data-key="optl">opcional</span></div>
+    <textarea name="agente_nombre_razon" data-ph="q27bp" placeholder="Cuéntanos brevemente por qué elegiste este nombre…"></textarea>
+  </div>
+
+  <div class="field">
     <div class="field-head"><span class="fnum">28</span><span class="flabel" data-key="q28">¿Cómo percibes la voz de tu agente?</span></div>
     <div class="opt-grid" id="g-gender"></div>
   </div>
@@ -481,7 +493,7 @@ es:{
   q05:"Edad",q05p:"Tu edad",
   q06:"Trayectoria profesional",q06p:"¿De dónde vienes? ¿Cuál es tu background? ¿Qué has hecho antes de Coordenadas?",
   q07:"¿Cuánto tiempo llevas en Coordenadas?",
-  q08:"¿Con cuáles de estos clientes o marcas trabajas actualmente?",
+  q08:"¿Con cuáles de estos clientes o marcas trabajas actualmente?",q08_all:"Todos los anteriores",
   q09:"¿Cuáles son tus proyectos activos en este momento?",
   q10:"Describe una semana de trabajo típica",q10p:"¿Cómo se ve tu semana día a día? ¿Qué tipo de tareas hacen parte de tu rutina?",
   q11:"¿Qué herramientas usas a diario?",
@@ -501,6 +513,7 @@ es:{
   q25:"¿Qué tan proactivo quieres que sea tu agente?",
   q26:"¿Hay algo que tu agente NUNCA debería hacer?",q26p:"Ej: mandarme notificaciones innecesarias, darme respuestas largas cuando solo necesito un dato…",
   q27:"¿Cómo se llama tu agente?",q27p:"Elige el nombre que quieras darle",
+  q27b:"¿Por qué este nombre?",q27bp:"Cuéntanos brevemente por qué elegiste este nombre…",
   q28:"¿Cómo percibes la voz de tu agente?",
   q29:"¿Qué arquetipo de personalidad encaja mejor?",
   q30:"¿Qué nivel de humor quieres en tu agente?",
@@ -510,7 +523,7 @@ es:{
   q34:"¿Qué quieres aprender o mejorar en los próximos 6 meses?",q34p:"No tiene que ser algo formal — puede ser cualquier cosa que quieras dominar o explorar.",
   q35:"¿Cómo quieres que tu agente apoye tu crecimiento?",q35p:"Ej: recordarme practicar algo, hacerme seguimiento de un objetivo, sugerirme recursos…",
   optl:"opcional",optl2:"opcional",
-  otroph:"Especifica…",nickph:"¿Cuál es tu apodo?",
+  otroph:"Especifica…",otroph_os:"¿Cuál sistema operativo?",nickph:"¿Cuál es tu apodo?",
   personal_lbl:"Proyectos personales",personal_hint:"Nómbralos y descríbelos brevemente.",personal_ph:"Ej: Estoy desarrollando una app, tengo un proyecto de fotografía personal…",
   bnxt:"Continuar →",bbck:"← Atrás",bsub:"Enviar respuestas →",
   tyh:"Listo.",typ:"Tus respuestas han sido enviadas. Diego las revisará y comenzará a construir tu agente personal.",
@@ -529,7 +542,7 @@ es:{
   gender:["Masculina","Femenina","Neutral / Sin preferencia"],
   arch:["El Estratega — analítico, planificador, orientado a resultados","El Creativo — generativo, pensamiento lateral, lleno de ideas","El Coach — motivador, orientado al crecimiento, te empuja a avanzar","El Ejecutor — acción primero, conciso, sin rodeos","El Compañero — colaborativo, conversacional, cálido"],
   humor:["Sin humor — serio y profesional","Algo de humor cuando el momento lo permite","Bienvenido el banter — quiero que sea divertido"],
-  address:["Mi nombre de pila","Mi apodo — lo especifico abajo","Sin preferencia"],
+  address:["Mi nombre de pila","Sin preferencia"],
   reslen:["Siempre corto y directo — menos es más","Detallado cuando el tema lo requiere","Que coincida con el tono de mi mensaje"]
 },
 en:{
@@ -548,7 +561,7 @@ en:{
   q05:"Age",q05p:"Your age",
   q06:"Professional background",q06p:"Where do you come from? What's your background? What did you do before Coordenadas?",
   q07:"How long have you been with Coordenadas?",
-  q08:"Which of these clients or brands do you currently work with?",
+  q08:"Which of these clients or brands do you currently work with?",q08_all:"All of the above",
   q09:"What are your active projects right now?",
   q10:"Describe a typical work week",q10p:"What does your week look like day to day? What kinds of tasks are part of your routine?",
   q11:"What tools do you use daily?",
@@ -568,6 +581,7 @@ en:{
   q25:"How proactive do you want your agent to be?",
   q26:"Is there anything your agent should NEVER do?",q26p:"e.g. interrupt me with unnecessary notifications, give long answers when I just need a quick fact…",
   q27:"What is your agent's name?",q27p:"Choose any name you want to give it",
+  q27b:"Why this name?",q27bp:"Tell us briefly why you chose this name…",
   q28:"How do you perceive your agent's voice?",
   q29:"Which personality archetype fits best?",
   q30:"What level of humor do you want from your agent?",
@@ -577,7 +591,7 @@ en:{
   q34:"What do you want to learn or improve in the next 6 months?",q34p:"It doesn't have to be formal — just anything you want to master or explore.",
   q35:"How would you want your agent to support your growth?",q35p:"e.g. remind me to practice something, track a goal, suggest resources when relevant…",
   optl:"optional",optl2:"optional",
-  otroph:"Specify…",nickph:"What's your nickname?",
+  otroph:"Specify…",otroph_os:"Which OS?",nickph:"What's your nickname?",
   personal_lbl:"Personal projects",personal_hint:"Name them and describe them briefly.",personal_ph:"e.g. I'm building an app, I have a personal photography project…",
   bnxt:"Continue →",bbck:"← Back",bsub:"Submit responses →",
   tyh:"Done.",typ:"Your responses have been sent. Diego will review them and start building your personal agent.",
@@ -596,7 +610,7 @@ en:{
   gender:["Masculine","Feminine","Neutral / No preference"],
   arch:["The Strategist — analytical, planning-focused, results-driven","The Creative — generative, lateral thinking, full of ideas","The Coach — motivating, growth-oriented, pushes you forward","The Executor — action-first, concise, no-nonsense","The Partner — collaborative, conversational, warm"],
   humor:["No humor — serious and professional","Light humor when the moment calls for it","Bring the banter — I want it fun"],
-  address:["My first name","My nickname — I'll specify below","No preference"],
+  address:["My first name","No preference"],
   reslen:["Always short and direct — less is more","Detailed when the topic calls for it","Match the tone of my message"]
 }};
 
@@ -621,7 +635,7 @@ function buildAllGrids(){
   buildGrid("g-areas","areas","area_trabajo","checkbox","rv-areas");
   buildGrid("g-tenure","tenure","tiempo_coord","radio","rv-tenure");
   buildGrid("g-tools","tools","herramientas","checkbox","rv-tools");
-  buildGrid("g-os","os","sistema_op","checkbox",null);
+  buildGrid("g-os","os","sistema_op","radio","rv-os");
   buildGrid("g-tech","tech","nivel_tech","radio",null);
   buildGrid("g-ai","ai_exp","exp_ai","radio",null);
   buildGrid("g-terminal","terminal","usa_terminal","radio",null);
@@ -629,7 +643,7 @@ function buildAllGrids(){
   buildGrid("g-lang","langs","idioma","radio",null);
   buildGrid("g-proact","proact","proactividad","radio",null);
   buildGrid("g-gender","gender","agente_genero","radio",null);
-  buildGrid("g-arch","arch","agente_arquetipo","radio",null);
+  buildGrid("g-arch","arch","agente_arquetipo","checkbox",null);
   buildGrid("g-humor","humor","agente_humor","radio",null);
   buildGrid("g-address","address","agente_trato","radio","rv-nickname");
   buildGrid("g-reslen","reslen","agente_reslen","radio",null);
@@ -699,6 +713,15 @@ document.addEventListener("change",function(e){
   }
 });
 
+// Select all / deselect all
+document.addEventListener("change",function(e){
+  const sel=e.target.dataset.selectall;
+  if(sel){
+    const checked=e.target.checked;
+    document.querySelectorAll(`[name="${sel}"]`).forEach(cb=>{cb.checked=checked;});
+  }
+});
+
 // Apps Script endpoint — UPDATE THIS after deploying
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbycyQ6C_XIeEZeWLzeMQTSJ3GgQbZqSAWceuWZIu53Ty7vY6Z_mCvG4-sFEKf76goE/exec";
 
@@ -739,12 +762,14 @@ function collectFormData(){
     proactividad:"",
     nunca:document.querySelector('[name="nunca"]')?.value||"",
     agente_nombre:document.querySelector('[name="agente_nombre"]')?.value||"",
+    agente_nombre_razon:document.querySelector('[name="agente_nombre_razon"]')?.value||"",
     agente_genero:"",
     agente_arquetipo:"",
     agente_humor:"",
     agente_trato:"",
     apodo:document.querySelector('[name="apodo"]')?.value||"",
     agente_reslen:"",
+    sistema_op_otro:document.querySelector('[name="sistema_op_otro"]')?.value||"",
     habilidades:document.querySelector('[name="habilidades"]')?.value||"",
     aprendizaje:document.querySelector('[name="aprendizaje"]')?.value||"",
     apoyo:document.querySelector('[name="apoyo"]')?.value||""
@@ -754,7 +779,8 @@ function collectFormData(){
     {name:"area_trabajo",names:"area_trabajo",reveal:"area_otro",revealEl:document.querySelector('[name="area_otro"]')},
     {name:"clientes",names:"clientes",reveal:null,revealEl:null},
     {name:"proyectos",names:"proyectos",reveal:null,revealEl:null},
-    {name:"herramientas",names:"herramientas",reveal:"tools_otro",revealEl:document.querySelector('[name="tools_otro"]')}
+    {name:"herramientas",names:"herramientas",reveal:"tools_otro",revealEl:document.querySelector('[name="tools_otro"]')},
+    {name:"agente_arquetipo",names:"agente_arquetipo",reveal:null,revealEl:null}
   ];
   for(const g of grids){
     const checked=[...document.querySelectorAll(`[name="${g.names}"]:checked`)].map(cb=>cb.value);
@@ -765,10 +791,14 @@ function collectFormData(){
     data[g.name]=checked.join(", ");
   }
   // Collect radio groups (single select)
-  const radios=["tiempo_coord","sistema_op","nivel_tech","exp_ai","usa_terminal","directividad","idioma","proactividad","agente_genero","agente_arquetipo","agente_humor","agente_trato","agente_reslen"];
+  const radios=["tiempo_coord","sistema_op","nivel_tech","exp_ai","usa_terminal","directividad","idioma","proactividad","agente_genero","agente_humor","agente_trato","agente_reslen"];
   for(const name of radios){
     const el=document.querySelector(`[name="${name}"]:checked`);
     data[name]=el?el.value:"";
+  }
+  // OS "Otro" → use typed text
+  if(data.sistema_op==="Otro"&&data.sistema_op_otro){
+    data.sistema_op=data.sistema_op_otro;
   }
   return data;
 }
@@ -786,15 +816,17 @@ document.getElementById("form").addEventListener("submit",async function(e){
   btn.textContent=T[lang].sending;btn.disabled=true;
   const data=collectFormData();
   try{
-    const res=await fetch(APPS_SCRIPT_URL,{method:"POST",body:JSON.stringify(data)});
-    const json=await res.json();
-    if(json.success){
-      this.style.display="none";
-      document.querySelector(".ty-body").textContent=pickTyMessage();
-      document.getElementById("thankyou").classList.add("show");
-      document.getElementById("progFill").style.width="100%";
-    }else{btn.textContent=T[lang].err;btn.disabled=false;}
-  }catch{btn.textContent=T[lang].err;btn.disabled=false;}
+    await fetch(APPS_SCRIPT_URL,{method:"POST",body:JSON.stringify(data),mode:"no-cors"});
+    this.style.display="none";
+    document.querySelector(".ty-body").textContent=pickTyMessage();
+    document.getElementById("thankyou").classList.add("show");
+    document.getElementById("progFill").style.width="100%";
+  }catch(err){
+    console.error("Submit error:",err);
+    btn.textContent=T[lang].err;
+    btn.title=err.toString();
+    btn.disabled=false;
+  }
 });
 
 // Init
