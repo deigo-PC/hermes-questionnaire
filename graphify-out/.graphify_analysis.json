@@ -1,0 +1,27 @@
+{
+  "communities": {
+    "0": [
+      "opencode_plugins_graphify",
+      "opencode_plugins_graphify_graphifyplugin",
+      "opencode_plugins_graphify_rationale_4"
+    ]
+  },
+  "cohesion": {
+    "0": 0.6666666666666666
+  },
+  "gods": [
+    {
+      "id": "opencode_plugins_graphify_rationale_4",
+      "label": "IMPORTANT: keep the reminder string free of backticks and $(...) constructs.",
+      "degree": 1
+    }
+  ],
+  "surprises": [],
+  "questions": [
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `IMPORTANT: keep the reminder string free of backticks and $(...) constructs.` to the rest of the system?",
+      "why": "1 weakly-connected nodes found - possible documentation gaps or missing edges."
+    }
+  ]
+}

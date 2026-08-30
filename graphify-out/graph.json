@@ -1,0 +1,64 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "graphify.js",
+      "file_type": "code",
+      "source_file": ".opencode/plugins/graphify.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "graphify.js",
+      "id": "opencode_plugins_graphify",
+      "community_name": "graphify.js"
+    },
+    {
+      "label": "GraphifyPlugin()",
+      "file_type": "code",
+      "source_file": ".opencode/plugins/graphify.js",
+      "source_location": "L12",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "graphifyplugin()",
+      "id": "opencode_plugins_graphify_graphifyplugin",
+      "community_name": "graphify.js"
+    },
+    {
+      "label": "IMPORTANT: keep the reminder string free of backticks and $(...) constructs.",
+      "file_type": "rationale",
+      "source_file": ".opencode/plugins/graphify.js",
+      "source_location": "L4",
+      "_origin": "ast",
+      "community": 0,
+      "norm_label": "important: keep the reminder string free of backticks and $(...) constructs.",
+      "id": "opencode_plugins_graphify_rationale_4",
+      "community_name": "graphify.js"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".opencode/plugins/graphify.js",
+      "source_location": "L12",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "opencode_plugins_graphify",
+      "target": "opencode_plugins_graphify_graphifyplugin"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": ".opencode/plugins/graphify.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "opencode_plugins_graphify_rationale_4",
+      "target": "opencode_plugins_graphify"
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "cacb288c69e9173f1784e9f2a66707a8b7bd9c45"
+}
