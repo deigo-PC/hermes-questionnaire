@@ -452,7 +452,7 @@ function task2_deleteRows() {
       continue;
     }
     const sheetRow = occurrences[0];
-    const actualTs = normTs(sheet.getRange(sheetRow, 1).getValue());
+    const actualTs = normTs(sheet.getRange(sheetRow, 1).getDisplayValue());
     const expectedTs = normTs(t.ts);
     if (actualTs !== expectedTs) {
       problems.push("Row " + sheetRow + " ID " + t.id + ": timestamp mismatch. Expected '" + t.ts + "' (norm '" + expectedTs + "'), found '" + actualTs + "'. Skipping entire operation.");
