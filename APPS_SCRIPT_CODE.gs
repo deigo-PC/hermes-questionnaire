@@ -320,3 +320,144 @@ function testGenerateAgentDocs() {
   console.log("Generated:", JSON.stringify(result, null, 2));
   return result;
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// TASK 1 — Add 6 missing header columns at columns 46–51 (row 2).
+// Verifies column 45 is exactly "Apoyo al crecimiento (apoyo)" and
+// column 46 is empty BEFORE writing anything. Aborts if either check
+// fails. Run manually from the Apps Script editor.
+// ═══════════════════════════════════════════════════════════════════
+function task1_addHeaders() {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
+
+  const col45 = sheet.getRange(2, 45).getValue();
+  if (String(col45).trim() !== "Apoyo al crecimiento (apoyo)") {
+    throw new Error("ABORT: column 45 is not 'Apoyo al crecimiento (apoyo)'. Found: " + JSON.stringify(col45));
+  }
+  const col46 = sheet.getRange(2, 46).getValue();
+  if (String(col46).trim() !== "") {
+    throw new Error("ABORT: column 46 is not empty. Found: " + JSON.stringify(col46));
+  }
+
+  const newHeaders = [
+    "Plataforma de chat (plataforma_chat)",
+    "Zona horaria (zona_horaria)",
+    "Zona horaria — otro (zona_horaria_otro)",
+    "Preferencia modelo IA (pref_modelo_ia)",
+    "Preferencia modelo IA — otro (pref_modelo_ia_otro)",
+    "Algo más (contexto_adicional)"
+  ];
+
+  sheet.getRange(2, 46, 1, 6).setValues([newHeaders]);
+
+  const readBack = sheet.getRange(2, 46, 1, 6).getValues()[0];
+  console.log("Added headers:", JSON.stringify(readBack));
+  return { added: newHeaders, readBack: readBack };
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TASK 2 — VERIFY step. Read-only. Finds each target row by EXACT match
+// on column B (ID / formspree_id) and returns its timestamp + content so
+// you can confirm it's the test junk row before deleting anything.
+// Deletes NOTHING.
+// ═══════════════════════════════════════════════════════════════════
+function task2_verifyRows() {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
+  const targetIds = [
+    "4de6556e-eb0e-4d25-9529-dd7d5d9c9410",
+    "421c85ea-4f4a-46b3-aa66-8716b9d2cfcf",
+    "4e6d65ae-2e35-4a25-8526-47f05dff74f3",
+    "e9088908-1c70-45c7-bc65-63c9b351991f",
+    "cd53cde9-f891-4ce5-af12-1affabdfe0eb"
+  ];
+
+  const lastRow = sheet.getLastRow();
+  const values = sheet.getRange(1, 1, lastRow, 12).getValues(); // cols A–L
+
+  const found = [];
+  const missing = [];
+  for (const id of targetIds) {
+    let match = null;
+    for (let r = 0; r < values.length; r++) {
+      if (values[r][1] === id) {
+        match = {
+          sheetRow: r + 1,
+          id: values[r][1],
+          timestamp: values[r][0],
+          nombre: values[r][3],   // column D
+          rol: values[r][5],      // column F
+          area: values[r][6],     // column G
+          sample: values[r].slice(0, 12)
+        };
+        break;
+      }
+    }
+    if (match) found.push(match); else missing.push(id);
+  }
+
+  console.log("TASK2 VERIFY — found " + found.length + ", missing " + missing.length);
+  console.log(JSON.stringify({ found: found, missing: missing }, null, 2));
+  return { found: found, missing: missing, totalDataRows: lastRow - 1 };
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TASK 2 — DELETE step. Run ONLY after reviewing task2_verifyRows().
+// Deletes a row only if column B matches one of the 5 target IDs AND
+// the row's timestamp (column A) also matches the expected value.
+// Refuses to run if not all 5 IDs are found exactly once, or if any
+// timestamp mismatch is detected — deletes nothing in those cases.
+// ═══════════════════════════════════════════════════════════════════
+function task2_deleteRows() {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
+  const targets = [
+    { id: "4de6556e-eb0e-4d25-9529-dd7d5d9c9410", ts: "9/12/2026 20:43:57" },
+    { id: "421c85ea-4f4a-46b3-aa66-8716b9d2cfcf", ts: "9/12/2026 21:33:01" },
+    { id: "4e6d65ae-2e35-4a25-8526-47f05dff74f3", ts: "9/12/2026 21:47:08" },
+    { id: "e9088908-1c70-45c7-bc65-63c9b351991f", ts: "9/12/2026 22:34:08" },
+    { id: "cd53cde9-f891-4ce5-af12-1affabdfe0eb", ts: "9/12/2026 22:38:08" }
+  ];
+
+  const lastRow = sheet.getLastRow();
+  const ids = sheet.getRange(1, 2, lastRow).getValues().map(function (r) { return r[0]; });
+
+  // Find the sheet row for each target.
+  const toDelete = [];
+  const problems = [];
+  for (const t of targets) {
+    const occurrences = [];
+    for (let i = 0; i < ids.length; i++) {
+      if (ids[i] === t.id) occurrences.push(i + 1);
+    }
+    if (occurrences.length !== 1) {
+      problems.push("ID " + t.id + " appears " + occurrences.length + " times (expected exactly 1). Skipping entire operation.");
+      continue;
+    }
+    const sheetRow = occurrences[0];
+    const actualTs = sheet.getRange(sheetRow, 1).getDisplayValue();
+    if (actualTs !== t.ts) {
+      problems.push("Row " + sheetRow + " ID " + t.id + ": timestamp mismatch. Expected '" + t.ts + "', found '" + actualTs + "'. Skipping entire operation.");
+      continue;
+    }
+    toDelete.push(sheetRow);
+  }
+
+  if (problems.length > 0) {
+    console.error("ABORTING delete — " + problems.length + " problem(s). Nothing was deleted.");
+    console.error(problems.join("\n"));
+    return { deleted: [], problems: problems };
+  }
+
+  if (toDelete.length !== targets.length) {
+    console.error("ABORTING delete — expected " + targets.length + " rows but only " + toDelete.length + " matched. Nothing was deleted.");
+    return { deleted: [], problems: ["row count mismatch"] };
+  }
+
+  // Delete from the bottom up so row numbers stay valid.
+  toDelete.sort(function (a, b) { return b - a; });
+  for (const r of toDelete) {
+    sheet.deleteRow(r);
+  }
+
+  console.log("Deleted " + toDelete.length + " rows: " + JSON.stringify(toDelete));
+  return { deleted: toDelete, problems: [] };
+}
