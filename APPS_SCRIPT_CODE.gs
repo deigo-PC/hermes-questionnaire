@@ -331,11 +331,12 @@ function task1_addHeaders() {
   const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
 
   const col45 = sheet.getRange(2, 45).getValue();
-  if (String(col45).trim() !== "Apoyo al crecimiento (apoyo)") {
+  const norm45 = String(col45).replace(/[\r\n]+/g, " ").trim();
+  if (norm45 !== "Apoyo al crecimiento (apoyo)") {
     throw new Error("ABORT: column 45 is not 'Apoyo al crecimiento (apoyo)'. Found: " + JSON.stringify(col45));
   }
   const col46 = sheet.getRange(2, 46).getValue();
-  if (String(col46).trim() !== "") {
+  if (String(col46).replace(/[\r\n]+/g, " ").trim() !== "") {
     throw new Error("ABORT: column 46 is not empty. Found: " + JSON.stringify(col46));
   }
 
@@ -404,6 +405,8 @@ function task2_verifyRows() {
 // TASK 2 — DELETE step. Run ONLY after reviewing task2_verifyRows().
 // Deletes a row only if column B matches one of the 5 target IDs AND
 // the row's timestamp (column A) also matches the expected value.
+// Timestamps are compared by normalized (date + hh:mm) value so Date
+// objects, ISO strings, and display strings all compare cleanly.
 // Refuses to run if not all 5 IDs are found exactly once, or if any
 // timestamp mismatch is detected — deletes nothing in those cases.
 // ═══════════════════════════════════════════════════════════════════
@@ -416,6 +419,22 @@ function task2_deleteRows() {
     { id: "e9088908-1c70-45c7-bc65-63c9b351991f", ts: "9/12/2026 22:34:08" },
     { id: "cd53cde9-f891-4ce5-af12-1affabdfe0eb", ts: "9/12/2026 22:38:08" }
   ];
+
+  // "M/D/YYYY H:MM:SS" (or "M/D/YYYY H:MM") → "YYYY-MM-DD HH:MM"
+  function normTs(v) {
+    if (!v) return "";
+    if (v instanceof Date) {
+      const pad = function (n) { return String(n).padStart(2, "0"); };
+      return v.getFullYear() + "-" + pad(v.getMonth() + 1) + "-" + pad(v.getDate()) + " " + pad(v.getHours()) + ":" + pad(v.getMinutes());
+    }
+    const s = String(v);
+    const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2})/);
+    if (m) return m[3] + "-" + m[1].padStart(2, "0") + "-" + m[2].padStart(2, "0") + " " + m[4].padStart(2, "0") + ":" + m[5];
+    // ISO fallback
+    const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+    if (iso) return iso[1] + "-" + iso[2] + "-" + iso[3] + " " + iso[4] + ":" + iso[5];
+    return s.trim();
+  }
 
   const lastRow = sheet.getLastRow();
   const ids = sheet.getRange(1, 2, lastRow).getValues().map(function (r) { return r[0]; });
@@ -433,9 +452,10 @@ function task2_deleteRows() {
       continue;
     }
     const sheetRow = occurrences[0];
-    const actualTs = sheet.getRange(sheetRow, 1).getDisplayValue();
-    if (actualTs !== t.ts) {
-      problems.push("Row " + sheetRow + " ID " + t.id + ": timestamp mismatch. Expected '" + t.ts + "', found '" + actualTs + "'. Skipping entire operation.");
+    const actualTs = normTs(sheet.getRange(sheetRow, 1).getValue());
+    const expectedTs = normTs(t.ts);
+    if (actualTs !== expectedTs) {
+      problems.push("Row " + sheetRow + " ID " + t.id + ": timestamp mismatch. Expected '" + t.ts + "' (norm '" + expectedTs + "'), found '" + actualTs + "'. Skipping entire operation.");
       continue;
     }
     toDelete.push(sheetRow);
