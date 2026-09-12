@@ -137,7 +137,7 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
     </svg>
     <span class="wordmark">coordenadas.co</span>
   </div>
-  <div class="step-ctr"><em id="stepNum">01</em>&thinsp;/&thinsp;08</div>
+  <div class="step-ctr"><em id="stepNum">01</em>&thinsp;/&thinsp;09</div>
   <div class="lang-tgl">
     <button class="lang-btn active" id="btn-es" onclick="setLang('es')">ES</button>
     <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
@@ -225,6 +225,13 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
         <input type="checkbox" data-selectall="clientes">
         <span data-key="q08_all">Todos los anteriores</span>
       </label>
+      <label class="opt-item" style="grid-column:1/-1">
+        <input type="checkbox" name="clientes" value="Otro" data-reveals="rv-clientes">
+        <span data-key="otro_opt">Otro</span>
+      </label>
+    </div>
+    <div id="rv-clientes" class="other-reveal">
+      <input type="text" name="clientes_otro" data-ph="otroph" placeholder="Especifica…">
     </div>
   </div>
 
@@ -244,9 +251,16 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
       <label class="opt-item"><input type="checkbox" name="proyectos" value="Pacho Setas"><span>Pacho Setas</span></label>
       <label class="opt-item"><input type="checkbox" name="proyectos" value="Indicame"><span>Indicame</span></label>
       <label class="opt-item" style="grid-column:1/-1">
+        <input type="checkbox" name="proyectos" value="Otro" data-reveals="rv-proyectos">
+        <span data-key="otro_opt">Otro</span>
+      </label>
+      <label class="opt-item" style="grid-column:1/-1">
         <input type="checkbox" name="proyectos" value="Proyectos personales" data-reveals="rv-personal">
         <span data-key="personal_lbl">Proyectos personales</span>
       </label>
+    </div>
+    <div id="rv-proyectos" class="other-reveal">
+      <input type="text" name="proyectos_otro" data-ph="otroph" placeholder="Especifica…">
     </div>
     <div id="rv-personal" class="personal-reveal">
       <p class="personal-reveal-label" data-key="personal_hint">Nómbralos y descríbelos brevemente.</p>
@@ -462,6 +476,51 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
 
   <div class="nav">
     <button type="button" class="btn btn-ghost" onclick="go(7)" data-key="bbck">← Atrás</button>
+    <button type="button" class="btn btn-primary" onclick="go(9)" data-key="bnxt">Continuar →</button>
+  </div>
+</div>
+
+<!-- ══ STEP 9 — CONFIG TÉCNICA ══ -->
+<div class="step" data-step="9">
+  <div class="eyebrow" data-key="s9e">CONFIG TÉCNICA</div>
+  <h1 class="sec-title" data-key="s9h">Cómo desplegamos tu agente.</h1>
+  <p class="sec-sub" data-key="s9s">Últimos detalles técnicos. Si no entiendes alguna pregunta, elige "No sé" — no pasa nada.</p>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">36</span><span class="flabel" data-key="q36">¿Dónde prefieres hablar con tu agente?</span></div>
+    <div class="opt-grid col1" id="g-chatplat"></div>
+    <div id="rv-chatplat" class="other-reveal">
+      <input type="text" name="plataforma_chat_otro" data-ph="otroph" placeholder="Especifica…">
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">37</span><span class="flabel" data-key="q37">¿Trabajas desde una zona horaria distinta a Colombia (America/Bogotá)?</span></div>
+    <div class="opt-grid col1" id="g-tzchoice">
+      <label class="opt-item"><input type="radio" name="zona_horaria" value="Sí" data-reveals="rv-tzchoice"><span data-key="tz_yes">Sí, trabajo en otra zona horaria</span></label>
+      <label class="opt-item"><input type="radio" name="zona_horaria" value="No, America/Bogotá"><span data-key="tz_no">No, uso America/Bogotá</span></label>
+      <label class="opt-item"><input type="radio" name="zona_horaria" value="No sé"><span data-key="tz_dk">No sé</span></label>
+    </div>
+    <div id="rv-tzchoice" class="other-reveal">
+      <input type="text" name="zona_horaria_otro" data-ph="zonaph" placeholder="¿Cuál zona horaria?">
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">38</span><span class="flabel" data-key="q38">¿Tienes alguna preferencia de modelo o proveedor de IA para tu agente?</span></div>
+    <div class="opt-grid col1" id="g-modelpref"></div>
+    <div id="rv-modelpref" class="other-reveal">
+      <input type="text" name="pref_modelo_ia_otro" data-ph="modelprefph" placeholder="Cuéntanos tu preferencia…">
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">39</span><span class="flabel" data-key="q39">¿Quieres tu propio usuario/contraseña para el dashboard de tu agente?</span></div>
+    <div class="opt-grid col1" id="g-dashaccess"></div>
+  </div>
+
+  <div class="nav">
+    <button type="button" class="btn btn-ghost" onclick="go(8)" data-key="bbck">← Atrás</button>
     <button type="submit" class="btn btn-primary" id="submitBtn" data-key="bsub">Enviar respuestas →</button>
   </div>
 </div>
@@ -486,6 +545,7 @@ es:{
   s6e:"TU AGENTE — COMUNICACIÓN",s6h:"Cómo quieres que te hable.",s6s:"Definimos el estilo de comunicación de tu agente contigo.",
   s7e:"TU AGENTE — PERSONALIZACIÓN",s7h:"Quién es tu agente.",s7s:"Define la identidad, personalidad y carácter de tu agente personal.",
   s8e:"CRECIMIENTO",s8h:"Hacia dónde vas.",s8s:"Esta sección es opcional, pero ayuda a que tu agente pueda acompañar tu desarrollo a largo plazo.",
+  s9e:"CONFIG TÉCNICA",s9h:"Cómo desplegamos tu agente.",s9s:"Últimos detalles técnicos. Si no entiendes alguna pregunta, elige \"No sé\" — no pasa nada.",
   q01:"Nombre completo",q01p:"Tu nombre completo",
   q02:"Email de trabajo",q02p:"tu@coordenadas.co",
   q03:"Rol en Coordenadas",q03p:"Ej: Editor de video, Diseñador gráfico, Productor…",
@@ -522,7 +582,14 @@ es:{
   q33:"¿Qué habilidades estás desarrollando actualmente?",q33p:"Herramientas, técnicas, soft skills, idiomas — lo que estés trabajando en este momento.",
   q34:"¿Qué quieres aprender o mejorar en los próximos 6 meses?",q34p:"No tiene que ser algo formal — puede ser cualquier cosa que quieras dominar o explorar.",
   q35:"¿Cómo quieres que tu agente apoye tu crecimiento?",q35p:"Ej: recordarme practicar algo, hacerme seguimiento de un objetivo, sugerirme recursos…",
+  q36:"¿Dónde prefieres hablar con tu agente?",
+  q37:"¿Trabajas desde una zona horaria distinta a Colombia (America/Bogotá)?",
+  q38:"¿Tienes alguna preferencia de modelo o proveedor de IA para tu agente?",
+  q39:"¿Quieres tu propio usuario/contraseña para el dashboard de tu agente?",
+  tz_yes:"Sí, trabajo en otra zona horaria",tz_no:"No, uso America/Bogotá",tz_dk:"No sé",
   optl:"opcional",optl2:"opcional",
+  otro_opt:"Otro",
+  zonaph:"¿Cuál zona horaria?",modelprefph:"Cuéntanos tu preferencia…",
   otroph:"Especifica…",otroph_os:"¿Cuál sistema operativo?",nickph:"¿Cuál es tu apodo?",
   personal_lbl:"Proyectos personales",personal_hint:"Nómbralos y descríbelos brevemente.",personal_ph:"Ej: Estoy desarrollando una app, tengo un proyecto de fotografía personal…",
   bnxt:"Continuar →",bbck:"← Atrás",bsub:"Enviar respuestas →",
@@ -531,7 +598,7 @@ es:{
   ty_messages:["Tu agente se está cocinando, se vienen cositas™","NPC convertido en protagonista.","Achievement unlocked: Primer empleado que no pide café.","Tu agente ya está haciendo estiramientos.","Las máquinas han tomado nota. No te preocupes… todavía."],
   areas:["Edición de Video","Motion Graphics / VFX","Diseño Gráfico","Contenido para Redes","Dirección Creativa","Estrategia / Planeación","Gestión de Proyectos","Administración / Operaciones"],
   tenure:["Menos de 6 meses","6 a 12 meses","1 a 2 años","Más de 2 años"],
-  tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / código"],
+  tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Claude Code","OpenCode","Hermes Agent","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / código"],
   os:["Windows","macOS","Ambos","Mobile (principalmente)"],
   tech:["Básico — uso lo que me piden y ya","Intermedio — exploro herramientas cuando me las recomiendan","Avanzado — aprendo herramientas nuevas activamente","Experto — configuro sistemas, puedo escribir código o scripts"],
   ai_exp:["Nunca las he usado","Las uso ocasionalmente","Las uso todos los días","Las uso y también las integro en mis flujos de trabajo"],
@@ -543,7 +610,10 @@ es:{
   arch:["El Estratega — analítico, planificador, orientado a resultados","El Creativo — generativo, pensamiento lateral, lleno de ideas","El Coach — motivador, orientado al crecimiento, te empuja a avanzar","El Ejecutor — acción primero, conciso, sin rodeos","El Compañero — colaborativo, conversacional, cálido"],
   humor:["Sin humor — serio y profesional","Algo de humor cuando el momento lo permite","Bienvenido el banter — quiero que sea divertido"],
   address:["Mi nombre de pila","Sin preferencia"],
-  reslen:["Siempre corto y directo — menos es más","Detallado cuando el tema lo requiere","Que coincida con el tono de mi mensaje"]
+  reslen:["Siempre corto y directo — menos es más","Detallado cuando el tema lo requiere","Que coincida con el tono de mi mensaje"],
+  chatplat:["Telegram","WhatsApp","Discord","Slack","Email","No sé / sin preferencia"],
+  modelpref:["Sin preferencia — que Diego decida (recomendado)","No sé / no entiendo la pregunta"],
+  dashaccess:["Sí, quiero mi propio acceso","No, que Diego lo administre por mí","No sé / no entiendo la pregunta"]
 },
 en:{
   s1e:"YOU",s1h:"You.",s1s:"Tell us who you are, your background, and your role on the team.",
@@ -554,6 +624,7 @@ en:{
   s6e:"YOUR AGENT — COMMUNICATION",s6h:"How you want it to talk to you.",s6s:"We define your agent's communication style with you.",
   s7e:"YOUR AGENT — PERSONALITY",s7h:"Who your agent is.",s7s:"Define the identity, personality, and character of your personal agent.",
   s8e:"GROWTH",s8h:"Where you're headed.",s8s:"This section is optional, but helps your agent support your development long-term.",
+  s9e:"TECH SETUP",s9h:"How we'll deploy your agent.",s9s:"A few last technical details. If a question doesn't make sense to you, pick \"I don't know\" — that's fine.",
   q01:"Full name",q01p:"Your full name",
   q02:"Work email",q02p:"you@coordenadas.co",
   q03:"Role at Coordenadas",q03p:"e.g. Video Editor, Graphic Designer, Producer…",
@@ -590,7 +661,14 @@ en:{
   q33:"What skills are you currently developing?",q33p:"Tools, techniques, soft skills, languages — anything you're actively working on.",
   q34:"What do you want to learn or improve in the next 6 months?",q34p:"It doesn't have to be formal — just anything you want to master or explore.",
   q35:"How would you want your agent to support your growth?",q35p:"e.g. remind me to practice something, track a goal, suggest resources when relevant…",
+  q36:"Where do you prefer to talk to your agent?",
+  q37:"Do you work from a timezone other than Colombia (America/Bogotá)?",
+  q38:"Do you have a preference for the AI model or provider your agent uses?",
+  q39:"Do you want your own username/password for your agent's dashboard?",
+  tz_yes:"Yes, I work in a different timezone",tz_no:"No, I'm on America/Bogotá",tz_dk:"I don't know",
   optl:"optional",optl2:"optional",
+  otro_opt:"Other",
+  zonaph:"Which timezone?",modelprefph:"Tell us your preference…",
   otroph:"Specify…",otroph_os:"Which OS?",nickph:"What's your nickname?",
   personal_lbl:"Personal projects",personal_hint:"Name them and describe them briefly.",personal_ph:"e.g. I'm building an app, I have a personal photography project…",
   bnxt:"Continue →",bbck:"← Back",bsub:"Submit responses →",
@@ -599,7 +677,7 @@ en:{
   ty_messages:["Your agent is cooking.","NPC promoted to main character.","Achievement unlocked: First employee who doesn't need coffee.","Born to automate. Forced to fill forms.","We got your agent before GTA VI.","Your agent is warming up.","The machines have received your request. Don't panic… yet."],
   areas:["Video Editing / Production","Motion Graphics / VFX","Graphic Design","Social Media Content","Creative Direction","Strategy / Planning","Project Management","Admin / Operations"],
   tenure:["Less than 6 months","6 to 12 months","1 to 2 years","More than 2 years"],
-  tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / code"],
+  tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Claude Code","OpenCode","Hermes Agent","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / code"],
   os:["Windows","macOS","Both","Mobile (mainly)"],
   tech:["Basic — I use what I'm told and that's it","Intermediate — I explore tools when recommended","Advanced — I actively learn new tools","Expert — I configure systems, can write code or scripts"],
   ai_exp:["Never used them","Occasionally","Every day","I use them and integrate them into my workflows"],
@@ -611,11 +689,14 @@ en:{
   arch:["The Strategist — analytical, planning-focused, results-driven","The Creative — generative, lateral thinking, full of ideas","The Coach — motivating, growth-oriented, pushes you forward","The Executor — action-first, concise, no-nonsense","The Partner — collaborative, conversational, warm"],
   humor:["No humor — serious and professional","Light humor when the moment calls for it","Bring the banter — I want it fun"],
   address:["My first name","No preference"],
-  reslen:["Always short and direct — less is more","Detailed when the topic calls for it","Match the tone of my message"]
+  reslen:["Always short and direct — less is more","Detailed when the topic calls for it","Match the tone of my message"],
+  chatplat:["Telegram","WhatsApp","Discord","Slack","Email","I don't know / no preference"],
+  modelpref:["No preference — let Diego decide (recommended)","I don't know / I don't understand this question"],
+  dashaccess:["Yes, I want my own access","No, let Diego manage it for me","I don't know / I don't understand this question"]
 }};
 
 let lang="es",step=1;
-const TOTAL=8;
+const TOTAL=9;
 
 // Build grids
 function buildGrid(id,optKey,name,type,revealId){
@@ -647,6 +728,9 @@ function buildAllGrids(){
   buildGrid("g-humor","humor","agente_humor","radio",null);
   buildGrid("g-address","address","agente_trato","radio","rv-nickname");
   buildGrid("g-reslen","reslen","agente_reslen","radio",null);
+  buildGrid("g-chatplat","chatplat","plataforma_chat","radio","rv-chatplat");
+  buildGrid("g-modelpref","modelpref","pref_modelo_ia","radio","rv-modelpref");
+  buildGrid("g-dashaccess","dashaccess","dashboard_acceso","radio",null);
 }
 
 // Language
@@ -729,8 +813,7 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBcwrUtSlXiZNk
 function collectFormData(){
   const data={
     fuente:"Discovery",
-    lang:lang,
-    submissionId:(typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():"id-"+Date.now()+"-"+Math.random().toString(36).slice(2,9),
+    formspree_id:(typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():"id-"+Date.now()+"-"+Math.random().toString(36).slice(2,9),
     nombre:document.querySelector('[name="nombre"]')?.value||"",
     _replyto:document.querySelector('[name="_replyto"]')?.value||"",
     rol:document.querySelector('[name="rol"]')?.value||"",
@@ -772,13 +855,18 @@ function collectFormData(){
     sistema_op_otro:document.querySelector('[name="sistema_op_otro"]')?.value||"",
     habilidades:document.querySelector('[name="habilidades"]')?.value||"",
     aprendizaje:document.querySelector('[name="aprendizaje"]')?.value||"",
-    apoyo:document.querySelector('[name="apoyo"]')?.value||""
+    apoyo:document.querySelector('[name="apoyo"]')?.value||"",
+    plataforma_chat:"",
+    zona_horaria:"",
+    zona_horaria_otro:document.querySelector('[name="zona_horaria_otro"]')?.value||"",
+    pref_modelo_ia:"",
+    dashboard_acceso:""
   };
   // Collect checkbox grids (comma-separated, merge "Other" values)
   const grids=[
     {name:"area_trabajo",names:"area_trabajo",reveal:"area_otro",revealEl:document.querySelector('[name="area_otro"]')},
-    {name:"clientes",names:"clientes",reveal:null,revealEl:null},
-    {name:"proyectos",names:"proyectos",reveal:null,revealEl:null},
+    {name:"clientes",names:"clientes",reveal:"clientes_otro",revealEl:document.querySelector('[name="clientes_otro"]')},
+    {name:"proyectos",names:"proyectos",reveal:"proyectos_otro",revealEl:document.querySelector('[name="proyectos_otro"]')},
     {name:"herramientas",names:"herramientas",reveal:"tools_otro",revealEl:document.querySelector('[name="tools_otro"]')},
     {name:"agente_arquetipo",names:"agente_arquetipo",reveal:null,revealEl:null}
   ];
@@ -791,7 +879,7 @@ function collectFormData(){
     data[g.name]=checked.join(", ");
   }
   // Collect radio groups (single select)
-  const radios=["tiempo_coord","sistema_op","nivel_tech","exp_ai","usa_terminal","directividad","idioma","proactividad","agente_genero","agente_humor","agente_trato","agente_reslen"];
+  const radios=["tiempo_coord","sistema_op","nivel_tech","exp_ai","usa_terminal","directividad","idioma","proactividad","agente_genero","agente_humor","agente_trato","agente_reslen","plataforma_chat","zona_horaria","pref_modelo_ia","dashboard_acceso"];
   for(const name of radios){
     const el=document.querySelector(`[name="${name}"]:checked`);
     data[name]=el?el.value:"";
@@ -799,6 +887,24 @@ function collectFormData(){
   // OS "Otro" → use typed text
   if(data.sistema_op==="Otro"&&data.sistema_op_otro){
     data.sistema_op=data.sistema_op_otro;
+  }
+  // Tenure "Otro" → use typed text
+  if(data.tiempo_coord==="Otro"&&data.tenure_otro){
+    data.tiempo_coord=data.tenure_otro;
+  }
+  // Timezone "Sí" → use typed text
+  if(data.zona_horaria==="Sí"&&data.zona_horaria_otro){
+    data.zona_horaria=data.zona_horaria_otro;
+  }
+  // Chat platform "Otro" → use typed text
+  const platOtroEl=document.querySelector('[name="plataforma_chat_otro"]');
+  if(data.plataforma_chat==="Otro"&&platOtroEl?.value){
+    data.plataforma_chat=platOtroEl.value;
+  }
+  // AI model preference "Otro" → use typed text
+  const modelOtroEl=document.querySelector('[name="pref_modelo_ia_otro"]');
+  if(data.pref_modelo_ia==="Otro"&&modelOtroEl?.value){
+    data.pref_modelo_ia=modelOtroEl.value;
   }
   return data;
 }
