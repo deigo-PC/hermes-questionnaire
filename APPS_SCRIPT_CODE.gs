@@ -262,3 +262,61 @@ function buildAgentDesignMd(data, person, agentName) {
     ""
   ].join("\n");
 }
+
+// Test helper — run this to generate docs with sample data
+function testGenerateAgentDocs() {
+  const sampleData = {
+    nombre: "Test User",
+    _replyto: "test@coordenadas.co",
+    rol: "Designer",
+    area_trabajo: "Diseño Gráfico, Motion Graphics / VFX",
+    area_otro: "",
+    edad: "28",
+    trayectoria: "5 años en diseño digital, 2 años en motion graphics",
+    tiempo_coord: "1 a 2 años",
+    tenure_otro: "",
+    clientes: "Coordenadas.co, Cliente Externo",
+    proyectos: "Rebranding Coordenadas, Campaign Q1",
+    proyectos_personales: "Proyecto de ilustración personal",
+    semana_tipica: "Lunes: reuniones, Martes-Jueves: diseño, Viernes: revisión",
+    herramientas: "Figma, After Effects, Photoshop, Illustrator",
+    tools_otro: "",
+    sistema_op: "macOS",
+    sistema_op_otro: "",
+    nivel_tech: "Intermedio — exploro herramientas cuando me las recomiendan",
+    exp_ai: "Las uso ocasionalmente",
+    usa_terminal: "Un poco — sé los básicos",
+    tareas_diarias: "Revisar Slack, revisar tareas en Notion, trabajar en diseños activos",
+    tareas_semanales: "Entregar avances, reunión de equipo, revisar feedback",
+    tareas_mensuales: "Reporte de métricas, planificación de sprints",
+    proc_repetitivos: "Exportar assets en múltiples tamaños, renombrar capas",
+    automatizar: "Exportación de assets, naming conventions",
+    info_repetitiva: "Brand guidelines, códigos de color, fuentes",
+    se_pierde: "Comentarios de feedback en hilos largos de Slack",
+    directividad: "Equilibrado — avísame, pero sin presionar",
+    idioma: "Español",
+    proactividad: "Intermedio — solo cuando algo es urgente o se está acumulando",
+    nunca: "Borrar archivos sin confirmar, cambiar nombres de capas sin avisar",
+    agente_nombre: "Talan",
+    agente_nombre_razon: "Significa 'guardián' en una lengua antigua, me gusta la idea de un agente que cuida mi trabajo",
+    agente_genero: "Neutral / Sin preferencia",
+    agente_arquetipo: "El Compañero — colaborativo, conversacional, cálido",
+    agente_humor: "Algo de humor cuando el momento lo permite",
+    agente_trato: "Mi nombre de pila",
+    apodo: "",
+    agente_reslen: "Detallado cuando el tema lo requiere",
+    habilidades: "Figma avanzado, prototipado, sistemas de diseño",
+    aprendizaje: "After Effects avanzado, expresiones, Python para automatización",
+    apoyo: "Recordarme practicar After Effects, sugerir tutoriales relevantes",
+    plataforma_chat: "Slack",
+    zona_horaria: "America/Mexico_City",
+    zona_horaria_otro: "",
+    pref_modelo_ia: "GPT-4",
+    pref_modelo_ia_otro: "",
+    contexto_adicional: "Me gustaría que el agente me ayude a no perder feedback importante en los hilos de Slack"
+  };
+
+  const result = generateAgentDocs(sampleData);
+  console.log("Generated:", JSON.stringify(result, null, 2));
+  return result;
+}
