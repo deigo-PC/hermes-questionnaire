@@ -120,7 +120,9 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
 .ty-title{font-family:'Syne',sans-serif;font-weight:800;font-size:36px;margin-bottom:14px;letter-spacing:-.02em}
 .ty-body{font-size:14px;font-weight:300;color:var(--txt2);max-width:380px;margin:0 auto;line-height:1.7}
 .ty-downloads{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+.ty-downloads[hidden]{display:none}
 .ty-downloads a{text-decoration:none}
+.dl-hint{font-size:11px;color:var(--txt3);margin-top:8px}
 
 /* Responsive */
 @media(max-width:520px){
@@ -302,7 +304,7 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
   <p class="sec-sub" data-key="s3s">Esto le ayuda al agente a entender cómo trabajas con herramientas digitales y cómo puede sugerirte mejoras realistas.</p>
 
     <div class="field">
-      <div class="field-head"><span class="fnum">12</span><span class="flabel" data-key="q12">¿Qué sistema operativo usas principalmente?</span></div>
+      <div class="field-head"><span class="fnum">12</span><span class="flabel" data-key="q12">¿Qué sistema(s) operativo(s) usas?</span></div>
       <div class="opt-grid" id="g-os"></div>
       <div id="rv-os" class="other-reveal">
         <input type="text" name="sistema_op_otro" data-ph="otroph_os" placeholder="¿Cuál sistema operativo?">
@@ -567,8 +569,10 @@ Email      → gratis, no es al instante</pre>
   <h2 class="ty-title" data-key="tyh">Listo.</h2>
   <p class="ty-body" data-key="typ">Tus respuestas han sido enviadas. Diego las revisará y comenzará a construir tu agente personal.</p>
   <div class="ty-downloads" id="tyDownloads" hidden>
-    <a class="btn btn-primary" id="dlSoul" href="#" target="_blank" rel="noopener"><span data-key="dl_soul">Descargar SOUL.md</span></a>
-    <a class="btn btn-ghost" id="dlDesign" href="#" target="_blank" rel="noopener"><span data-key="dl_design">Descargar Agent-Design.md</span></a>
+    <div>
+      <a class="btn btn-primary" id="dlZip" href="#" target="_blank" rel="noopener"><span data-key="dl_zip">Descargar tus archivos (.zip)</span></a>
+      <p class="dl-hint" data-key="dl_hint">Incluye SOUL.md y Agent-Design.md</p>
+    </div>
   </div>
 </div>
 </main>
@@ -597,7 +601,7 @@ es:{
   q09:"¿Cuáles son tus proyectos activos en este momento?",
   q10:"Describe una semana de trabajo típica",q10p:"¿Cómo se ve tu semana día a día? ¿Qué tipo de tareas hacen parte de tu rutina?",
   q11:"¿Qué herramientas usas a diario?",
-  q12:"¿Qué sistema operativo usas principalmente?",
+  q12:"¿Qué sistema(s) operativo(s) usas?",
   q13:"¿Cómo describirías tu nivel de comodidad con la tecnología?",
   q14:"¿Cuál es tu experiencia con herramientas de inteligencia artificial?",
   q15:"¿Usas la terminal / línea de comandos?",
@@ -637,13 +641,13 @@ es:{
   personal_lbl:"Proyectos personales",personal_hint:"Nómbralos y descríbelos brevemente.",personal_ph:"Ej: Estoy desarrollando una app, tengo un proyecto de fotografía personal…",
   bnxt:"Continuar →",bbck:"← Atrás",bsub:"Enviar respuestas →",
   tyh:"Listo.",typ:"Tus respuestas han sido enviadas. Diego las revisará y comenzará a construir tu agente personal.",
-  dl_soul:"Descargar SOUL.md",dl_design:"Descargar Agent-Design.md",
+  dl_zip:"Descargar tus archivos (.zip)",dl_hint:"Incluye SOUL.md y Agent-Design.md",
   sending:"Enviando…",err:"Error — intenta de nuevo",
   ty_messages:["Tu agente se está cocinando, se vienen cositas™","NPC convertido en protagonista.","Achievement unlocked: Primer empleado que no pide café.","Tu agente ya está haciendo estiramientos.","Las máquinas han tomado nota. No te preocupes… todavía."],
   areas:["Edición de Video","Motion Graphics / VFX","Diseño Gráfico","Contenido para Redes","Dirección Creativa","Estrategia / Planeación","Gestión de Proyectos","Administración / Operaciones"],
   tenure:["Menos de 6 meses","6 a 12 meses","1 a 2 años","Más de 2 años"],
   tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Claude Code","OpenCode","Hermes Agent","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / código"],
-  os:["Windows","macOS","Linux","Varios (combino más de uno)","Mobile (principalmente)"],
+  os:["Windows","macOS","Linux","Mobile"],
   tech:["Básico — uso lo que me piden y ya","Intermedio — exploro herramientas cuando me las recomiendan","Avanzado — aprendo herramientas nuevas activamente","Experto — configuro sistemas, puedo escribir código o scripts"],
   ai_exp:["Nunca las he usado","Las uso ocasionalmente","Las uso todos los días","Las uso y también las integro en mis flujos de trabajo"],
   terminal:["Sí, con comodidad","No, nunca la uso","Un poco — sé los básicos","No, pero me interesa aprender"],
@@ -680,7 +684,7 @@ en:{
   q09:"What are your active projects right now?",
   q10:"Describe a typical work week",q10p:"What does your week look like day to day? What kinds of tasks are part of your routine?",
   q11:"What tools do you use daily?",
-  q12:"What operating system do you mainly use?",
+  q12:"What operating system(s) do you use?",
   q13:"How would you describe your comfort level with technology?",
   q14:"What is your experience with artificial intelligence tools?",
   q15:"Do you use the terminal / command line?",
@@ -720,13 +724,13 @@ en:{
   personal_lbl:"Personal projects",personal_hint:"Name them and describe them briefly.",personal_ph:"e.g. I'm building an app, I have a personal photography project…",
   bnxt:"Continue →",bbck:"← Back",bsub:"Submit responses →",
   tyh:"Done.",typ:"Your responses have been sent. Diego will review them and start building your personal agent.",
-  dl_soul:"Download SOUL.md",dl_design:"Download Agent-Design.md",
+  dl_zip:"Download your files (.zip)",dl_hint:"Includes SOUL.md and Agent-Design.md",
   sending:"Sending…",err:"Error — try again",
   ty_messages:["Your agent is cooking.","NPC promoted to main character.","Achievement unlocked: First employee who doesn't need coffee.","Born to automate. Forced to fill forms.","We got your agent before GTA VI.","Your agent is warming up.","The machines have received your request. Don't panic… yet."],
   areas:["Video Editing / Production","Motion Graphics / VFX","Graphic Design","Social Media Content","Creative Direction","Strategy / Planning","Project Management","Admin / Operations"],
   tenure:["Less than 6 months","6 to 12 months","1 to 2 years","More than 2 years"],
   tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Claude Code","OpenCode","Hermes Agent","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / code"],
-  os:["Windows","macOS","Linux","Multiple (I use more than one)","Mobile (mainly)"],
+  os:["Windows","macOS","Linux","Mobile"],
   tech:["Basic — I use what I'm told and that's it","Intermediate — I explore tools when recommended","Advanced — I actively learn new tools","Expert — I configure systems, can write code or scripts"],
   ai_exp:["Never used them","Occasionally","Every day","I use them and integrate them into my workflows"],
   terminal:["Yes, comfortably","No, never","A little — I know the basics","No, but I'd like to learn"],
@@ -763,7 +767,7 @@ function buildAllGrids(){
   buildGrid("g-areas","areas","area_trabajo","checkbox","rv-areas");
   buildGrid("g-tenure","tenure","tiempo_coord","radio","rv-tenure");
   buildGrid("g-tools","tools","herramientas","checkbox","rv-tools");
-  buildGrid("g-os","os","sistema_op","radio","rv-os");
+  buildGrid("g-os","os","sistema_op","checkbox","rv-os");
   buildGrid("g-tech","tech","nivel_tech","radio",null);
   buildGrid("g-ai","ai_exp","exp_ai","radio",null);
   buildGrid("g-terminal","terminal","usa_terminal","radio",null);
@@ -914,6 +918,7 @@ function collectFormData(){
     {name:"clientes",names:"clientes",reveal:"clientes_otro",revealEl:document.querySelector('[name="clientes_otro"]')},
     {name:"proyectos",names:"proyectos",reveal:"proyectos_otro",revealEl:document.querySelector('[name="proyectos_otro"]')},
     {name:"herramientas",names:"herramientas",reveal:"tools_otro",revealEl:document.querySelector('[name="tools_otro"]')},
+    {name:"sistema_op",names:"sistema_op",reveal:"sistema_op_otro",revealEl:document.querySelector('[name="sistema_op_otro"]')},
     {name:"agente_arquetipo",names:"agente_arquetipo",reveal:null,revealEl:null}
   ];
   for(const g of grids){
@@ -925,14 +930,10 @@ function collectFormData(){
     data[g.name]=checked.join(", ");
   }
   // Collect radio groups (single select)
-  const radios=["tiempo_coord","sistema_op","nivel_tech","exp_ai","usa_terminal","directividad","idioma","proactividad","agente_genero","agente_humor","agente_trato","agente_reslen","plataforma_chat","zona_horaria","pref_modelo_ia"];
+  const radios=["tiempo_coord","nivel_tech","exp_ai","usa_terminal","directividad","idioma","proactividad","agente_genero","agente_humor","agente_trato","agente_reslen","plataforma_chat","zona_horaria","pref_modelo_ia"];
   for(const name of radios){
     const el=document.querySelector(`[name="${name}"]:checked`);
     data[name]=el?el.value:"";
-  }
-  // OS "Otro" → use typed text
-  if(data.sistema_op==="Otro"&&data.sistema_op_otro){
-    data.sistema_op=data.sistema_op_otro;
   }
   // Tenure "Otro" → use typed text
   if(data.tiempo_coord==="Otro"&&data.tenure_otro){
@@ -988,8 +989,7 @@ function fetchDownloadLinks(agentName){
 async function showDownloadLinks(agentName){
   const links=await fetchDownloadLinks(agentName);
   if(!links)return; // best-effort — no links is not an error the user needs to see
-  document.getElementById("dlSoul").href=links.soulUrl;
-  document.getElementById("dlDesign").href=links.designUrl;
+  document.getElementById("dlZip").href=links.zipUrl;
   document.getElementById("tyDownloads").hidden=false;
 }
 
