@@ -93,6 +93,12 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
 .personal-reveal.show{display:block}
 .personal-reveal-label{font-size:12px;color:var(--txt2);margin-bottom:8px;font-style:italic}
 
+/* Field note (cost/caveat callouts) */
+.field-note{margin:8px 0 14px;padding:12px 14px;background:var(--acc-dim2);border:1px solid var(--bdr);border-left:3px solid var(--acc);border-radius:var(--r);font-size:12.5px;color:var(--txt2);line-height:1.6}
+.field-note strong{color:var(--txt)}
+.field-diagram{margin:8px 0 14px;padding:14px 16px;background:var(--acc-dim2);border:1px solid var(--bdr);border-left:3px solid var(--acc);border-radius:var(--r);font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.75;color:var(--txt2);white-space:pre;overflow-x:auto}
+@media(max-width:520px){.field-diagram{font-size:10.5px}}
+
 /* Nav */
 .nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:20px;border-top:1px solid var(--bdr)}
 .btn{font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;padding:11px 26px;border-radius:var(--r);border:none;cursor:pointer;transition:all var(--ease);letter-spacing:.01em}
@@ -113,6 +119,10 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
 .ty-glyph{font-family:'JetBrains Mono',monospace;font-size:32px;color:var(--acc);margin-bottom:28px;display:block}
 .ty-title{font-family:'Syne',sans-serif;font-weight:800;font-size:36px;margin-bottom:14px;letter-spacing:-.02em}
 .ty-body{font-size:14px;font-weight:300;color:var(--txt2);max-width:380px;margin:0 auto;line-height:1.7}
+.ty-downloads{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+.ty-downloads[hidden]{display:none}
+.ty-downloads a{text-decoration:none}
+.dl-hint{font-size:11px;color:var(--txt3);margin-top:8px}
 
 /* Responsive */
 @media(max-width:520px){
@@ -137,7 +147,7 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
     </svg>
     <span class="wordmark">coordenadas.co</span>
   </div>
-  <div class="step-ctr"><em id="stepNum">01</em>&thinsp;/&thinsp;08</div>
+  <div class="step-ctr"><em id="stepNum">01</em>&thinsp;/&thinsp;10</div>
   <div class="lang-tgl">
     <button class="lang-btn active" id="btn-es" onclick="setLang('es')">ES</button>
     <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
@@ -225,6 +235,13 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
         <input type="checkbox" data-selectall="clientes">
         <span data-key="q08_all">Todos los anteriores</span>
       </label>
+      <label class="opt-item" style="grid-column:1/-1">
+        <input type="checkbox" name="clientes" value="Otro" data-reveals="rv-clientes">
+        <span data-key="otro_opt">Otro</span>
+      </label>
+    </div>
+    <div id="rv-clientes" class="other-reveal">
+      <input type="text" name="clientes_otro" data-ph="otroph" placeholder="Especifica…">
     </div>
   </div>
 
@@ -244,9 +261,16 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
       <label class="opt-item"><input type="checkbox" name="proyectos" value="Pacho Setas"><span>Pacho Setas</span></label>
       <label class="opt-item"><input type="checkbox" name="proyectos" value="Indicame"><span>Indicame</span></label>
       <label class="opt-item" style="grid-column:1/-1">
+        <input type="checkbox" name="proyectos" value="Otro" data-reveals="rv-proyectos">
+        <span data-key="otro_opt">Otro</span>
+      </label>
+      <label class="opt-item" style="grid-column:1/-1">
         <input type="checkbox" name="proyectos" value="Proyectos personales" data-reveals="rv-personal">
         <span data-key="personal_lbl">Proyectos personales</span>
       </label>
+    </div>
+    <div id="rv-proyectos" class="other-reveal">
+      <input type="text" name="proyectos_otro" data-ph="otroph" placeholder="Especifica…">
     </div>
     <div id="rv-personal" class="personal-reveal">
       <p class="personal-reveal-label" data-key="personal_hint">Nómbralos y descríbelos brevemente.</p>
@@ -280,7 +304,7 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
   <p class="sec-sub" data-key="s3s">Esto le ayuda al agente a entender cómo trabajas con herramientas digitales y cómo puede sugerirte mejoras realistas.</p>
 
     <div class="field">
-      <div class="field-head"><span class="fnum">12</span><span class="flabel" data-key="q12">¿Qué sistema operativo usas principalmente?</span></div>
+      <div class="field-head"><span class="fnum">12</span><span class="flabel" data-key="q12">¿Qué sistema(s) operativo(s) usas?</span></div>
       <div class="opt-grid" id="g-os"></div>
       <div id="rv-os" class="other-reveal">
         <input type="text" name="sistema_op_otro" data-ph="otroph_os" placeholder="¿Cuál sistema operativo?">
@@ -462,6 +486,78 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
 
   <div class="nav">
     <button type="button" class="btn btn-ghost" onclick="go(7)" data-key="bbck">← Atrás</button>
+    <button type="button" class="btn btn-primary" onclick="go(9)" data-key="bnxt">Continuar →</button>
+  </div>
+</div>
+
+<!-- ══ STEP 9 — CONFIG TÉCNICA ══ -->
+<div class="step" data-step="9">
+  <div class="eyebrow" data-key="s9e">CONFIG TÉCNICA</div>
+  <h1 class="sec-title" data-key="s9h">Cómo desplegamos tu agente.</h1>
+  <p class="sec-sub" data-key="s9s">Últimos detalles técnicos. Si no entiendes alguna pregunta, elige "No sé" — no pasa nada.</p>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">36</span><span class="flabel" data-key="q36">¿Dónde prefieres hablar con tu agente?</span></div>
+    <pre class="field-diagram" data-key="q36_note">Telegram   → gratis, recomendado
+WhatsApp   → $$ cobra por mensaje
+Discord    → gratis (si tu equipo ya lo usa)
+Slack      → gratis (si tu equipo ya lo usa)
+Email      → gratis, no es al instante</pre>
+    <div class="opt-grid col1" id="g-chatplat"></div>
+    <div id="rv-chatplat" class="other-reveal">
+      <input type="text" name="plataforma_chat_otro" data-ph="otroph" placeholder="Especifica…">
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">37</span><span class="flabel" data-key="q37">¿Trabajas desde una zona horaria distinta a Colombia (America/Bogotá)?</span></div>
+    <div class="opt-grid col1" id="g-tzchoice">
+      <label class="opt-item"><input type="radio" name="zona_horaria" value="Sí" data-reveals="rv-tzchoice"><span data-key="tz_yes">Sí, trabajo en otra zona horaria</span></label>
+      <label class="opt-item"><input type="radio" name="zona_horaria" value="No, America/Bogotá"><span data-key="tz_no">No, uso America/Bogotá</span></label>
+      <label class="opt-item"><input type="radio" name="zona_horaria" value="No sé"><span data-key="tz_dk">No sé</span></label>
+    </div>
+    <div id="rv-tzchoice" class="other-reveal">
+      <input type="text" name="zona_horaria_otro" data-ph="zonaph" placeholder="¿Cuál zona horaria?">
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">38</span><span class="flabel" data-key="q38">¿Tienes alguna preferencia de modelo o proveedor de IA para tu agente?</span></div>
+    <pre class="field-diagram" data-key="q38_note">Tu agente necesita OpenCode Go
+  → $10 USD/mes (obligatorio)
+
+  [1] económico · empieza aquí
+      DeepSeek-V4-Flash / GLM-5.3-flash
+      menos tokens
+
+  [2] mejor razonamiento
+      DeepSeek-V4-pto / GLM-5.3
+      más tokens → más costo</pre>
+    <div class="opt-grid col1" id="g-modelpref"></div>
+    <div id="rv-modelpref" class="other-reveal">
+      <input type="text" name="pref_modelo_ia_otro" data-ph="modelprefph" placeholder="Cuéntanos tu preferencia…">
+    </div>
+  </div>
+
+  <div class="nav">
+    <button type="button" class="btn btn-ghost" onclick="go(8)" data-key="bbck">← Atrás</button>
+    <button type="button" class="btn btn-primary" onclick="go(10)" data-key="bnxt">Continuar →</button>
+  </div>
+</div>
+
+<!-- ══ STEP 10 — ALGO MÁS ══ -->
+<div class="step" data-step="10">
+  <div class="eyebrow" data-key="s10e">ALGO MÁS</div>
+  <h1 class="sec-title" data-key="s10h">¿Qué más deberíamos saber?</h1>
+  <p class="field-note" data-key="s10note">Antes de enviar, tómate un momento. Piensa en lo que acabas de responder: tus tareas, lo que se te olvida, ese proyecto personal que quedó pausado por falta de tiempo o de saber cómo seguir. Tu agente puede ayudarte con eso también, no solo con lo obvio. ¿Hay algo que no encajó en las preguntas anteriores? ¿Un proceso que sabes que está roto pero nunca has dicho en voz alta? ¿Algo que aprendiste a medias y quedó ahí? Este es el espacio para eso.</p>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">40</span><span class="flabel" data-key="q40">Cuéntanos lo que quieras</span><span class="fopt" data-key="optl">opcional</span></div>
+    <textarea name="contexto_adicional" data-ph="q40p" placeholder="Escribe lo que quieras — no hay respuesta incorrecta." style="min-height:160px"></textarea>
+  </div>
+
+  <div class="nav">
+    <button type="button" class="btn btn-ghost" onclick="go(9)" data-key="bbck">← Atrás</button>
     <button type="submit" class="btn btn-primary" id="submitBtn" data-key="bsub">Enviar respuestas →</button>
   </div>
 </div>
@@ -472,6 +568,12 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
   <span class="ty-glyph">◈</span>
   <h2 class="ty-title" data-key="tyh">Listo.</h2>
   <p class="ty-body" data-key="typ">Tus respuestas han sido enviadas. Diego las revisará y comenzará a construir tu agente personal.</p>
+  <div class="ty-downloads" id="tyDownloads" hidden>
+    <div>
+      <a class="btn btn-primary" id="dlZip" href="#" target="_blank" rel="noopener"><span data-key="dl_zip">Descargar tus archivos (.zip)</span></a>
+      <p class="dl-hint" data-key="dl_hint">Incluye SOUL.md y Agent-Design.md</p>
+    </div>
+  </div>
 </div>
 </main>
 
@@ -486,6 +588,8 @@ es:{
   s6e:"TU AGENTE — COMUNICACIÓN",s6h:"Cómo quieres que te hable.",s6s:"Definimos el estilo de comunicación de tu agente contigo.",
   s7e:"TU AGENTE — PERSONALIZACIÓN",s7h:"Quién es tu agente.",s7s:"Define la identidad, personalidad y carácter de tu agente personal.",
   s8e:"CRECIMIENTO",s8h:"Hacia dónde vas.",s8s:"Esta sección es opcional, pero ayuda a que tu agente pueda acompañar tu desarrollo a largo plazo.",
+  s9e:"CONFIG TÉCNICA",s9h:"Cómo desplegamos tu agente.",s9s:"Últimos detalles técnicos. Si no entiendes alguna pregunta, elige \"No sé\" — no pasa nada.",
+  s10e:"ALGO MÁS",s10h:"¿Qué más deberíamos saber?",
   q01:"Nombre completo",q01p:"Tu nombre completo",
   q02:"Email de trabajo",q02p:"tu@coordenadas.co",
   q03:"Rol en Coordenadas",q03p:"Ej: Editor de video, Diseñador gráfico, Productor…",
@@ -497,7 +601,7 @@ es:{
   q09:"¿Cuáles son tus proyectos activos en este momento?",
   q10:"Describe una semana de trabajo típica",q10p:"¿Cómo se ve tu semana día a día? ¿Qué tipo de tareas hacen parte de tu rutina?",
   q11:"¿Qué herramientas usas a diario?",
-  q12:"¿Qué sistema operativo usas principalmente?",
+  q12:"¿Qué sistema(s) operativo(s) usas?",
   q13:"¿Cómo describirías tu nivel de comodidad con la tecnología?",
   q14:"¿Cuál es tu experiencia con herramientas de inteligencia artificial?",
   q15:"¿Usas la terminal / línea de comandos?",
@@ -522,17 +626,28 @@ es:{
   q33:"¿Qué habilidades estás desarrollando actualmente?",q33p:"Herramientas, técnicas, soft skills, idiomas — lo que estés trabajando en este momento.",
   q34:"¿Qué quieres aprender o mejorar en los próximos 6 meses?",q34p:"No tiene que ser algo formal — puede ser cualquier cosa que quieras dominar o explorar.",
   q35:"¿Cómo quieres que tu agente apoye tu crecimiento?",q35p:"Ej: recordarme practicar algo, hacerme seguimiento de un objetivo, sugerirme recursos…",
+  q36:"¿Dónde prefieres hablar con tu agente?",
+  q37:"¿Trabajas desde una zona horaria distinta a Colombia (America/Bogotá)?",
+  q38:"¿Tienes alguna preferencia de modelo o proveedor de IA para tu agente?",
+  q36_note:"Telegram   → gratis, recomendado\nWhatsApp   → $$ cobra por mensaje\nDiscord    → gratis (si tu equipo ya lo usa)\nSlack      → gratis (si tu equipo ya lo usa)\nEmail      → gratis, no es al instante",
+  q38_note:"Tu agente necesita OpenCode Go\n  → $10 USD/mes (obligatorio)\n\n  [1] económico · empieza aquí\n      DeepSeek-V4-Flash / GLM-5.3-flash\n      menos tokens\n\n  [2] mejor razonamiento\n      DeepSeek-V4-pto / GLM-5.3\n      más tokens → más costo",
+  q40:"Cuéntanos lo que quieras",q40p:"Escribe lo que quieras — no hay respuesta incorrecta.",
+  s10note:"Antes de enviar, tómate un momento. Piensa en lo que acabas de responder: tus tareas, lo que se te olvida, ese proyecto personal que quedó pausado por falta de tiempo o de saber cómo seguir. Tu agente puede ayudarte con eso también, no solo con lo obvio. ¿Hay algo que no encajó en las preguntas anteriores? ¿Un proceso que sabes que está roto pero nunca has dicho en voz alta? ¿Algo que aprendiste a medias y quedó ahí? Este es el espacio para eso.",
+  tz_yes:"Sí, trabajo en otra zona horaria",tz_no:"No, uso America/Bogotá",tz_dk:"No sé",
   optl:"opcional",optl2:"opcional",
+  otro_opt:"Otro",
+  zonaph:"¿Cuál zona horaria?",modelprefph:"Cuéntanos tu preferencia…",
   otroph:"Especifica…",otroph_os:"¿Cuál sistema operativo?",nickph:"¿Cuál es tu apodo?",
   personal_lbl:"Proyectos personales",personal_hint:"Nómbralos y descríbelos brevemente.",personal_ph:"Ej: Estoy desarrollando una app, tengo un proyecto de fotografía personal…",
   bnxt:"Continuar →",bbck:"← Atrás",bsub:"Enviar respuestas →",
   tyh:"Listo.",typ:"Tus respuestas han sido enviadas. Diego las revisará y comenzará a construir tu agente personal.",
+  dl_zip:"Descargar tus archivos (.zip)",dl_hint:"Incluye SOUL.md y Agent-Design.md",
   sending:"Enviando…",err:"Error — intenta de nuevo",
   ty_messages:["Tu agente se está cocinando, se vienen cositas™","NPC convertido en protagonista.","Achievement unlocked: Primer empleado que no pide café.","Tu agente ya está haciendo estiramientos.","Las máquinas han tomado nota. No te preocupes… todavía."],
   areas:["Edición de Video","Motion Graphics / VFX","Diseño Gráfico","Contenido para Redes","Dirección Creativa","Estrategia / Planeación","Gestión de Proyectos","Administración / Operaciones"],
   tenure:["Menos de 6 meses","6 a 12 meses","1 a 2 años","Más de 2 años"],
-  tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / código"],
-  os:["Windows","macOS","Ambos","Mobile (principalmente)"],
+  tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Claude Code","OpenCode","Hermes Agent","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / código"],
+  os:["Windows","macOS","Linux","Mobile"],
   tech:["Básico — uso lo que me piden y ya","Intermedio — exploro herramientas cuando me las recomiendan","Avanzado — aprendo herramientas nuevas activamente","Experto — configuro sistemas, puedo escribir código o scripts"],
   ai_exp:["Nunca las he usado","Las uso ocasionalmente","Las uso todos los días","Las uso y también las integro en mis flujos de trabajo"],
   terminal:["Sí, con comodidad","No, nunca la uso","Un poco — sé los básicos","No, pero me interesa aprender"],
@@ -543,7 +658,9 @@ es:{
   arch:["El Estratega — analítico, planificador, orientado a resultados","El Creativo — generativo, pensamiento lateral, lleno de ideas","El Coach — motivador, orientado al crecimiento, te empuja a avanzar","El Ejecutor — acción primero, conciso, sin rodeos","El Compañero — colaborativo, conversacional, cálido"],
   humor:["Sin humor — serio y profesional","Algo de humor cuando el momento lo permite","Bienvenido el banter — quiero que sea divertido"],
   address:["Mi nombre de pila","Sin preferencia"],
-  reslen:["Siempre corto y directo — menos es más","Detallado cuando el tema lo requiere","Que coincida con el tono de mi mensaje"]
+  reslen:["Siempre corto y directo — menos es más","Detallado cuando el tema lo requiere","Que coincida con el tono de mi mensaje"],
+  chatplat:["Telegram","WhatsApp","Discord","Slack","Email","No sé / sin preferencia"],
+  modelpref:["Empezar económico — DeepSeek-V4-Flash o GLM-5.3-flash (recomendado)","Mejor razonamiento — DeepSeek-V4-pto o GLM-5.3 (usa más tokens)","Sin preferencia — que Diego decida","No sé / no entiendo la pregunta"]
 },
 en:{
   s1e:"YOU",s1h:"You.",s1s:"Tell us who you are, your background, and your role on the team.",
@@ -554,6 +671,8 @@ en:{
   s6e:"YOUR AGENT — COMMUNICATION",s6h:"How you want it to talk to you.",s6s:"We define your agent's communication style with you.",
   s7e:"YOUR AGENT — PERSONALITY",s7h:"Who your agent is.",s7s:"Define the identity, personality, and character of your personal agent.",
   s8e:"GROWTH",s8h:"Where you're headed.",s8s:"This section is optional, but helps your agent support your development long-term.",
+  s9e:"TECH SETUP",s9h:"How we'll deploy your agent.",s9s:"A few last technical details. If a question doesn't make sense to you, pick \"I don't know\" — that's fine.",
+  s10e:"ONE MORE THING",s10h:"What else should we know?",
   q01:"Full name",q01p:"Your full name",
   q02:"Work email",q02p:"you@coordenadas.co",
   q03:"Role at Coordenadas",q03p:"e.g. Video Editor, Graphic Designer, Producer…",
@@ -565,7 +684,7 @@ en:{
   q09:"What are your active projects right now?",
   q10:"Describe a typical work week",q10p:"What does your week look like day to day? What kinds of tasks are part of your routine?",
   q11:"What tools do you use daily?",
-  q12:"What operating system do you mainly use?",
+  q12:"What operating system(s) do you use?",
   q13:"How would you describe your comfort level with technology?",
   q14:"What is your experience with artificial intelligence tools?",
   q15:"Do you use the terminal / command line?",
@@ -590,17 +709,28 @@ en:{
   q33:"What skills are you currently developing?",q33p:"Tools, techniques, soft skills, languages — anything you're actively working on.",
   q34:"What do you want to learn or improve in the next 6 months?",q34p:"It doesn't have to be formal — just anything you want to master or explore.",
   q35:"How would you want your agent to support your growth?",q35p:"e.g. remind me to practice something, track a goal, suggest resources when relevant…",
+  q36:"Where do you prefer to talk to your agent?",
+  q37:"Do you work from a timezone other than Colombia (America/Bogotá)?",
+  q38:"Do you have a preference for the AI model or provider your agent uses?",
+  q36_note:"Telegram   → free, recommended\nWhatsApp   → $$ charges per message\nDiscord    → free (only if your team uses it)\nSlack      → free (only if your team uses it)\nEmail      → free, not real-time",
+  q38_note:"Your agent needs OpenCode Go\n  → $10 USD/month (required)\n\n  [1] economical · start here\n      DeepSeek-V4-Flash / GLM-5.3-flash\n      fewer tokens\n\n  [2] better reasoning\n      DeepSeek-V4-pto / GLM-5.3\n      more tokens → more cost",
+  q40:"Tell us whatever you want",q40p:"Write whatever you want — there's no wrong answer.",
+  s10note:"Before you submit, take a moment. Think back over what you just answered — your tasks, the things that slip through, that personal project that stalled because you ran out of time or didn't know how to keep going. Your agent can help with that too, not just the obvious stuff. Is there anything that didn't fit into the questions above? A process you know is broken but have never said out loud? Something you half-learned and left there? This is the space for that.",
+  tz_yes:"Yes, I work in a different timezone",tz_no:"No, I'm on America/Bogotá",tz_dk:"I don't know",
   optl:"optional",optl2:"optional",
+  otro_opt:"Other",
+  zonaph:"Which timezone?",modelprefph:"Tell us your preference…",
   otroph:"Specify…",otroph_os:"Which OS?",nickph:"What's your nickname?",
   personal_lbl:"Personal projects",personal_hint:"Name them and describe them briefly.",personal_ph:"e.g. I'm building an app, I have a personal photography project…",
   bnxt:"Continue →",bbck:"← Back",bsub:"Submit responses →",
   tyh:"Done.",typ:"Your responses have been sent. Diego will review them and start building your personal agent.",
+  dl_zip:"Download your files (.zip)",dl_hint:"Includes SOUL.md and Agent-Design.md",
   sending:"Sending…",err:"Error — try again",
   ty_messages:["Your agent is cooking.","NPC promoted to main character.","Achievement unlocked: First employee who doesn't need coffee.","Born to automate. Forced to fill forms.","We got your agent before GTA VI.","Your agent is warming up.","The machines have received your request. Don't panic… yet."],
   areas:["Video Editing / Production","Motion Graphics / VFX","Graphic Design","Social Media Content","Creative Direction","Strategy / Planning","Project Management","Admin / Operations"],
   tenure:["Less than 6 months","6 to 12 months","1 to 2 years","More than 2 years"],
-  tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / code"],
-  os:["Windows","macOS","Both","Mobile (mainly)"],
+  tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Claude Code","OpenCode","Hermes Agent","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / code"],
+  os:["Windows","macOS","Linux","Mobile"],
   tech:["Basic — I use what I'm told and that's it","Intermediate — I explore tools when recommended","Advanced — I actively learn new tools","Expert — I configure systems, can write code or scripts"],
   ai_exp:["Never used them","Occasionally","Every day","I use them and integrate them into my workflows"],
   terminal:["Yes, comfortably","No, never","A little — I know the basics","No, but I'd like to learn"],
@@ -611,11 +741,13 @@ en:{
   arch:["The Strategist — analytical, planning-focused, results-driven","The Creative — generative, lateral thinking, full of ideas","The Coach — motivating, growth-oriented, pushes you forward","The Executor — action-first, concise, no-nonsense","The Partner — collaborative, conversational, warm"],
   humor:["No humor — serious and professional","Light humor when the moment calls for it","Bring the banter — I want it fun"],
   address:["My first name","No preference"],
-  reslen:["Always short and direct — less is more","Detailed when the topic calls for it","Match the tone of my message"]
+  reslen:["Always short and direct — less is more","Detailed when the topic calls for it","Match the tone of my message"],
+  chatplat:["Telegram","WhatsApp","Discord","Slack","Email","I don't know / no preference"],
+  modelpref:["Start economical — DeepSeek-V4-Flash or GLM-5.3-flash (recommended)","Better reasoning — DeepSeek-V4-pto or GLM-5.3 (uses more tokens)","No preference — let Diego decide","I don't know / I don't understand this question"]
 }};
 
 let lang="es",step=1;
-const TOTAL=8;
+const TOTAL=10;
 
 // Build grids
 function buildGrid(id,optKey,name,type,revealId){
@@ -635,7 +767,7 @@ function buildAllGrids(){
   buildGrid("g-areas","areas","area_trabajo","checkbox","rv-areas");
   buildGrid("g-tenure","tenure","tiempo_coord","radio","rv-tenure");
   buildGrid("g-tools","tools","herramientas","checkbox","rv-tools");
-  buildGrid("g-os","os","sistema_op","radio","rv-os");
+  buildGrid("g-os","os","sistema_op","checkbox","rv-os");
   buildGrid("g-tech","tech","nivel_tech","radio",null);
   buildGrid("g-ai","ai_exp","exp_ai","radio",null);
   buildGrid("g-terminal","terminal","usa_terminal","radio",null);
@@ -647,6 +779,8 @@ function buildAllGrids(){
   buildGrid("g-humor","humor","agente_humor","radio",null);
   buildGrid("g-address","address","agente_trato","radio","rv-nickname");
   buildGrid("g-reslen","reslen","agente_reslen","radio",null);
+  buildGrid("g-chatplat","chatplat","plataforma_chat","radio","rv-chatplat");
+  buildGrid("g-modelpref","modelpref","pref_modelo_ia","radio","rv-modelpref");
 }
 
 // Language
@@ -723,14 +857,13 @@ document.addEventListener("change",function(e){
 });
 
 // Apps Script endpoint — UPDATE THIS after deploying
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxBcwrUtSlXiZNkTKhtHu9Pp0Eakh0A4pHruUM3D6SuWwHhNnQ5ibfoH1MLSasXK9Yx/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzM_x4a8tDUI9zvMDxLyvoSctmzhlt13gZk8r5FDvrV8hE2j0FYCEAbQ1t-2dTV_ky6/exec";
 
 // Collect all form data into a flat object
 function collectFormData(){
   const data={
     fuente:"Discovery",
-    lang:lang,
-    submissionId:(typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():"id-"+Date.now()+"-"+Math.random().toString(36).slice(2,9),
+    formspree_id:(typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():"id-"+Date.now()+"-"+Math.random().toString(36).slice(2,9),
     nombre:document.querySelector('[name="nombre"]')?.value||"",
     _replyto:document.querySelector('[name="_replyto"]')?.value||"",
     rol:document.querySelector('[name="rol"]')?.value||"",
@@ -772,14 +905,20 @@ function collectFormData(){
     sistema_op_otro:document.querySelector('[name="sistema_op_otro"]')?.value||"",
     habilidades:document.querySelector('[name="habilidades"]')?.value||"",
     aprendizaje:document.querySelector('[name="aprendizaje"]')?.value||"",
-    apoyo:document.querySelector('[name="apoyo"]')?.value||""
+    apoyo:document.querySelector('[name="apoyo"]')?.value||"",
+    plataforma_chat:"",
+    zona_horaria:"",
+    zona_horaria_otro:document.querySelector('[name="zona_horaria_otro"]')?.value||"",
+    pref_modelo_ia:"",
+    contexto_adicional:document.querySelector('[name="contexto_adicional"]')?.value||""
   };
   // Collect checkbox grids (comma-separated, merge "Other" values)
   const grids=[
     {name:"area_trabajo",names:"area_trabajo",reveal:"area_otro",revealEl:document.querySelector('[name="area_otro"]')},
-    {name:"clientes",names:"clientes",reveal:null,revealEl:null},
-    {name:"proyectos",names:"proyectos",reveal:null,revealEl:null},
+    {name:"clientes",names:"clientes",reveal:"clientes_otro",revealEl:document.querySelector('[name="clientes_otro"]')},
+    {name:"proyectos",names:"proyectos",reveal:"proyectos_otro",revealEl:document.querySelector('[name="proyectos_otro"]')},
     {name:"herramientas",names:"herramientas",reveal:"tools_otro",revealEl:document.querySelector('[name="tools_otro"]')},
+    {name:"sistema_op",names:"sistema_op",reveal:"sistema_op_otro",revealEl:document.querySelector('[name="sistema_op_otro"]')},
     {name:"agente_arquetipo",names:"agente_arquetipo",reveal:null,revealEl:null}
   ];
   for(const g of grids){
@@ -791,14 +930,28 @@ function collectFormData(){
     data[g.name]=checked.join(", ");
   }
   // Collect radio groups (single select)
-  const radios=["tiempo_coord","sistema_op","nivel_tech","exp_ai","usa_terminal","directividad","idioma","proactividad","agente_genero","agente_humor","agente_trato","agente_reslen"];
+  const radios=["tiempo_coord","nivel_tech","exp_ai","usa_terminal","directividad","idioma","proactividad","agente_genero","agente_humor","agente_trato","agente_reslen","plataforma_chat","zona_horaria","pref_modelo_ia"];
   for(const name of radios){
     const el=document.querySelector(`[name="${name}"]:checked`);
     data[name]=el?el.value:"";
   }
-  // OS "Otro" → use typed text
-  if(data.sistema_op==="Otro"&&data.sistema_op_otro){
-    data.sistema_op=data.sistema_op_otro;
+  // Tenure "Otro" → use typed text
+  if(data.tiempo_coord==="Otro"&&data.tenure_otro){
+    data.tiempo_coord=data.tenure_otro;
+  }
+  // Timezone "Sí" → use typed text
+  if(data.zona_horaria==="Sí"&&data.zona_horaria_otro){
+    data.zona_horaria=data.zona_horaria_otro;
+  }
+  // Chat platform "Otro" → use typed text
+  const platOtroEl=document.querySelector('[name="plataforma_chat_otro"]');
+  if(data.plataforma_chat==="Otro"&&platOtroEl?.value){
+    data.plataforma_chat=platOtroEl.value;
+  }
+  // AI model preference "Otro" → use typed text
+  const modelOtroEl=document.querySelector('[name="pref_modelo_ia_otro"]');
+  if(data.pref_modelo_ia==="Otro"&&modelOtroEl?.value){
+    data.pref_modelo_ia=modelOtroEl.value;
   }
   return data;
 }
@@ -807,6 +960,37 @@ function collectFormData(){
 function pickTyMessage(){
   const msgs=T[lang].ty_messages;
   return msgs[Math.floor(Math.random()*msgs.length)];
+}
+
+// The POST above uses mode:"no-cors" so the response body can never be read —
+// that's required for Apps Script Web Apps (see README). To still get the
+// submitter their generated file links, fetch them separately via JSONP
+// (a <script> tag load isn't subject to CORS), keyed by agent name.
+function fetchDownloadLinks(agentName){
+  return new Promise(function(resolve){
+    const cbName="hermesLinksCb_"+Date.now();
+    const timeout=setTimeout(function(){cleanup();resolve(null);},8000);
+    function cleanup(){
+      delete window[cbName];
+      if(script.parentNode)script.parentNode.removeChild(script);
+      clearTimeout(timeout);
+    }
+    window[cbName]=function(resp){
+      cleanup();
+      resolve(resp&&resp.success?resp:null);
+    };
+    const script=document.createElement("script");
+    script.src=APPS_SCRIPT_URL+"?action=links&agent="+encodeURIComponent(agentName)+"&callback="+cbName;
+    script.onerror=function(){cleanup();resolve(null);};
+    document.body.appendChild(script);
+  });
+}
+
+async function showDownloadLinks(agentName){
+  const links=await fetchDownloadLinks(agentName);
+  if(!links)return; // best-effort — no links is not an error the user needs to see
+  document.getElementById("dlZip").href=links.zipUrl;
+  document.getElementById("tyDownloads").hidden=false;
 }
 
 // Submit
@@ -821,6 +1005,7 @@ document.getElementById("form").addEventListener("submit",async function(e){
     document.querySelector(".ty-body").textContent=pickTyMessage();
     document.getElementById("thankyou").classList.add("show");
     document.getElementById("progFill").style.width="100%";
+    showDownloadLinks(data.agente_nombre||data.nombre);
   }catch(err){
     console.error("Submit error:",err);
     btn.textContent=T[lang].err;
