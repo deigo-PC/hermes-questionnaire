@@ -55,7 +55,7 @@ function doGet(e) {
 
 function extractKey(header) {
   const cleaned = header.toString().replace(/[\r\n]+/g, " ").toLowerCase();
-  var fields = ["formspree_id","fuente","nombre","_replyto","rol","area_trabajo","area_otro","edad","trayectoria","tiempo_coord","tenure_otro","clientes","proyectos","proyectos_personales","semana_tipica","herramientas","tools_otro","sistema_op","sistema_op_otro","nivel_tech","exp_ai","usa_terminal","tareas_diarias","tareas_semanales","tareas_mensuales","proc_repetitivos","automatizar","info_repetitiva","se_pierde","directividad","idioma","proactividad","nunca","agente_nombre","agente_nombre_razon","agente_genero","agente_arquetipo","agente_humor","agente_trato","apodo","agente_reslen","habilidades","aprendizaje","apoyo","plataforma_chat","zona_horaria","zona_horaria_otro","pref_modelo_ia","pref_modelo_ia_otro","dashboard_acceso"];
+  var fields = ["formspree_id","fuente","nombre","_replyto","rol","area_trabajo","area_otro","edad","trayectoria","tiempo_coord","tenure_otro","clientes","proyectos","proyectos_personales","semana_tipica","herramientas","tools_otro","sistema_op","sistema_op_otro","nivel_tech","exp_ai","usa_terminal","tareas_diarias","tareas_semanales","tareas_mensuales","proc_repetitivos","automatizar","info_repetitiva","se_pierde","directividad","idioma","proactividad","nunca","agente_nombre","agente_nombre_razon","agente_genero","agente_arquetipo","agente_humor","agente_trato","apodo","agente_reslen","habilidades","aprendizaje","apoyo","plataforma_chat","zona_horaria","zona_horaria_otro","pref_modelo_ia","pref_modelo_ia_otro"];
   for (var i = 0; i < fields.length; i++) {
     if (cleaned.indexOf("(" + fields[i] + ")") !== -1) return fields[i];
   }
@@ -163,8 +163,7 @@ function buildAgentDesignMd(data, person, agentName) {
     "## Deployment Preferences",
     "- Preferred chat platform: " + field(data, "plataforma_chat"),
     "- Timezone: " + field(data, "zona_horaria"),
-    "- AI model/provider preference: " + field(data, "pref_modelo_ia"),
-    "- Dashboard access: " + field(data, "dashboard_acceso"),
+    "- AI model/provider preference: " + field(data, "pref_modelo_ia") + " (requires an OpenCode Go subscription, $10 USD/month)",
     ""
   ].join("\n");
 }

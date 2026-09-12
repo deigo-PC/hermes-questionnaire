@@ -30,7 +30,7 @@ Google Drive — "Hermes Agent — SOUL Files" folder
 - The form collects all answers into a flat JSON object.
 - Apps Script reads the header row (row 2), extracts each column's field name from the `(field_name)` suffix, and writes the matching value into a new row.
 - After the row is written, Apps Script also generates `<agent>-SOUL.md` (identity, who the user is, technical profile, communication rules — the tight persona file meant to be loaded every turn) and `<agent>-Agent-Design.md` (recurring processes, automation targets, growth goals, deployment preferences — a one-time build/ops brief) and saves both to a Drive folder next to the spreadsheet, created automatically on first run. This replaces the previously manual step of hand-writing those files from the sheet's "🗺️ Mapeo SOUL.md" tab.
-- Step 9 ("Config técnica") collects deployment preferences (chat platform, timezone, AI model/provider preference, dashboard access) — every question there has a "No sé / no entiendo" opt-out, since these can be genuinely unfamiliar to non-technical team members.
+- Step 9 ("Config técnica") collects deployment preferences (chat platform, timezone, AI model/provider preference) — every question there has a "No sé / no entiendo" opt-out, since these can be genuinely unfamiliar to non-technical team members. It also discloses real costs: WhatsApp bills per conversation via the Business API, and an OpenCode Go subscription ($10 USD/month) is required for any agent to function at all.
 - No page reload, no external dependencies, works from any static host.
 
 ## Setup
@@ -61,4 +61,4 @@ Open the live form, fill it out, and submit. The row should appear in the spread
 - The script matches columns dynamically by the `(field_name)` suffix, so columns can be added/reordered as long as the suffix matches the form's field names.
 - To add a new field: add the field to the form's `collectFormData()` in `index.html`, add a matching column header in the spreadsheet, and add the name to the `fields` array in `extractKey` in `APPS_SCRIPT_CODE.gs`.
 - The `ID (formspree_id)` and `Fuente (fuente)` columns were previously always blank — the form sent them, but `extractKey`'s `fields` allowlist didn't include them. Fixed as of this update.
-- Step 9 adds `plataforma_chat`, `zona_horaria`, `zona_horaria_otro`, `pref_modelo_ia`, `pref_modelo_ia_otro`, `dashboard_acceso` to the payload. `extractKey` already recognizes them; add matching columns to the sheet whenever convenient — they aren't required for `SOUL.md`/`Agent-Design.md` generation, which reads straight from the submitted payload, not from the sheet.
+- Step 9 adds `plataforma_chat`, `zona_horaria`, `zona_horaria_otro`, `pref_modelo_ia`, `pref_modelo_ia_otro` to the payload. `extractKey` already recognizes them; add matching columns to the sheet whenever convenient — they aren't required for `SOUL.md`/`Agent-Design.md` generation, which reads straight from the submitted payload, not from the sheet.

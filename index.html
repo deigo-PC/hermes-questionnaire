@@ -93,6 +93,10 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
 .personal-reveal.show{display:block}
 .personal-reveal-label{font-size:12px;color:var(--txt2);margin-bottom:8px;font-style:italic}
 
+/* Field note (cost/caveat callouts) */
+.field-note{margin:8px 0 14px;padding:12px 14px;background:var(--acc-dim2);border:1px solid var(--bdr);border-left:3px solid var(--acc);border-radius:var(--r);font-size:12.5px;color:var(--txt2);line-height:1.6}
+.field-note strong{color:var(--txt)}
+
 /* Nav */
 .nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:20px;border-top:1px solid var(--bdr)}
 .btn{font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;padding:11px 26px;border-radius:var(--r);border:none;cursor:pointer;transition:all var(--ease);letter-spacing:.01em}
@@ -488,6 +492,7 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
 
   <div class="field">
     <div class="field-head"><span class="fnum">36</span><span class="flabel" data-key="q36">¿Dónde prefieres hablar con tu agente?</span></div>
+    <p class="field-note" data-key="q36_note">Telegram es gratis y es donde ya viven los agentes en producción — recomendado. WhatsApp tiene un costo real (la API de WhatsApp Business cobra por conversación) y requiere verificación de negocio, que puede tardar días. Discord y Slack son gratis, pero solo tienen sentido si tu equipo ya los usa. Email es gratis pero no es una conversación en tiempo real.</p>
     <div class="opt-grid col1" id="g-chatplat"></div>
     <div id="rv-chatplat" class="other-reveal">
       <input type="text" name="plataforma_chat_otro" data-ph="otroph" placeholder="Especifica…">
@@ -508,15 +513,11 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
 
   <div class="field">
     <div class="field-head"><span class="fnum">38</span><span class="flabel" data-key="q38">¿Tienes alguna preferencia de modelo o proveedor de IA para tu agente?</span></div>
+    <p class="field-note" data-key="q38_note">Importante — esto no es opcional: tu agente necesita una suscripción a OpenCode Go ($10 USD/mes) para funcionar; sin eso no puede responderte. Para empezar, recomendamos un modelo económico (DeepSeek-V4-Flash o GLM-5.3-flash) que cuida el consumo de tokens. Si necesitas mejor razonamiento puedes usar DeepSeek-V4-pto o GLM-5.3, pero consumen más tokens y cuestan más — Diego puede ayudarte a decidir si no estás seguro.</p>
     <div class="opt-grid col1" id="g-modelpref"></div>
     <div id="rv-modelpref" class="other-reveal">
       <input type="text" name="pref_modelo_ia_otro" data-ph="modelprefph" placeholder="Cuéntanos tu preferencia…">
     </div>
-  </div>
-
-  <div class="field">
-    <div class="field-head"><span class="fnum">39</span><span class="flabel" data-key="q39">¿Quieres tu propio usuario/contraseña para el dashboard de tu agente?</span></div>
-    <div class="opt-grid col1" id="g-dashaccess"></div>
   </div>
 
   <div class="nav">
@@ -585,7 +586,8 @@ es:{
   q36:"¿Dónde prefieres hablar con tu agente?",
   q37:"¿Trabajas desde una zona horaria distinta a Colombia (America/Bogotá)?",
   q38:"¿Tienes alguna preferencia de modelo o proveedor de IA para tu agente?",
-  q39:"¿Quieres tu propio usuario/contraseña para el dashboard de tu agente?",
+  q36_note:"Telegram es gratis y es donde ya viven los agentes en producción — recomendado. WhatsApp tiene un costo real (la API de WhatsApp Business cobra por conversación) y requiere verificación de negocio, que puede tardar días. Discord y Slack son gratis, pero solo tienen sentido si tu equipo ya los usa. Email es gratis pero no es una conversación en tiempo real.",
+  q38_note:"Importante — esto no es opcional: tu agente necesita una suscripción a OpenCode Go ($10 USD/mes) para funcionar; sin eso no puede responderte. Para empezar, recomendamos un modelo económico (DeepSeek-V4-Flash o GLM-5.3-flash) que cuida el consumo de tokens. Si necesitas mejor razonamiento puedes usar DeepSeek-V4-pto o GLM-5.3, pero consumen más tokens y cuestan más — Diego puede ayudarte a decidir si no estás seguro.",
   tz_yes:"Sí, trabajo en otra zona horaria",tz_no:"No, uso America/Bogotá",tz_dk:"No sé",
   optl:"opcional",optl2:"opcional",
   otro_opt:"Otro",
@@ -612,8 +614,7 @@ es:{
   address:["Mi nombre de pila","Sin preferencia"],
   reslen:["Siempre corto y directo — menos es más","Detallado cuando el tema lo requiere","Que coincida con el tono de mi mensaje"],
   chatplat:["Telegram","WhatsApp","Discord","Slack","Email","No sé / sin preferencia"],
-  modelpref:["Sin preferencia — que Diego decida (recomendado)","No sé / no entiendo la pregunta"],
-  dashaccess:["Sí, quiero mi propio acceso","No, que Diego lo administre por mí","No sé / no entiendo la pregunta"]
+  modelpref:["Empezar económico — DeepSeek-V4-Flash o GLM-5.3-flash (recomendado)","Mejor razonamiento — DeepSeek-V4-pto o GLM-5.3 (usa más tokens)","Sin preferencia — que Diego decida","No sé / no entiendo la pregunta"]
 },
 en:{
   s1e:"YOU",s1h:"You.",s1s:"Tell us who you are, your background, and your role on the team.",
@@ -664,7 +665,8 @@ en:{
   q36:"Where do you prefer to talk to your agent?",
   q37:"Do you work from a timezone other than Colombia (America/Bogotá)?",
   q38:"Do you have a preference for the AI model or provider your agent uses?",
-  q39:"Do you want your own username/password for your agent's dashboard?",
+  q36_note:"Telegram is free and is where the agents already live in production — recommended. WhatsApp has a real cost (the WhatsApp Business API charges per conversation) and requires business verification, which can take days. Discord and Slack are free, but only make sense if your team already uses them. Email is free but isn't a real-time conversation.",
+  q38_note:"Important — this isn't optional: your agent needs an OpenCode Go subscription ($10 USD/month) to work at all. To start, we recommend an economical model (DeepSeek-V4-Flash or GLM-5.3-flash) that keeps token usage in check. If you need better reasoning you can use DeepSeek-V4-pto or GLM-5.3, but they use more tokens and cost more — Diego can help you decide if you're not sure.",
   tz_yes:"Yes, I work in a different timezone",tz_no:"No, I'm on America/Bogotá",tz_dk:"I don't know",
   optl:"optional",optl2:"optional",
   otro_opt:"Other",
@@ -691,8 +693,7 @@ en:{
   address:["My first name","No preference"],
   reslen:["Always short and direct — less is more","Detailed when the topic calls for it","Match the tone of my message"],
   chatplat:["Telegram","WhatsApp","Discord","Slack","Email","I don't know / no preference"],
-  modelpref:["No preference — let Diego decide (recommended)","I don't know / I don't understand this question"],
-  dashaccess:["Yes, I want my own access","No, let Diego manage it for me","I don't know / I don't understand this question"]
+  modelpref:["Start economical — DeepSeek-V4-Flash or GLM-5.3-flash (recommended)","Better reasoning — DeepSeek-V4-pto or GLM-5.3 (uses more tokens)","No preference — let Diego decide","I don't know / I don't understand this question"]
 }};
 
 let lang="es",step=1;
@@ -730,7 +731,6 @@ function buildAllGrids(){
   buildGrid("g-reslen","reslen","agente_reslen","radio",null);
   buildGrid("g-chatplat","chatplat","plataforma_chat","radio","rv-chatplat");
   buildGrid("g-modelpref","modelpref","pref_modelo_ia","radio","rv-modelpref");
-  buildGrid("g-dashaccess","dashaccess","dashboard_acceso","radio",null);
 }
 
 // Language
@@ -859,8 +859,7 @@ function collectFormData(){
     plataforma_chat:"",
     zona_horaria:"",
     zona_horaria_otro:document.querySelector('[name="zona_horaria_otro"]')?.value||"",
-    pref_modelo_ia:"",
-    dashboard_acceso:""
+    pref_modelo_ia:""
   };
   // Collect checkbox grids (comma-separated, merge "Other" values)
   const grids=[
@@ -879,7 +878,7 @@ function collectFormData(){
     data[g.name]=checked.join(", ");
   }
   // Collect radio groups (single select)
-  const radios=["tiempo_coord","sistema_op","nivel_tech","exp_ai","usa_terminal","directividad","idioma","proactividad","agente_genero","agente_humor","agente_trato","agente_reslen","plataforma_chat","zona_horaria","pref_modelo_ia","dashboard_acceso"];
+  const radios=["tiempo_coord","sistema_op","nivel_tech","exp_ai","usa_terminal","directividad","idioma","proactividad","agente_genero","agente_humor","agente_trato","agente_reslen","plataforma_chat","zona_horaria","pref_modelo_ia"];
   for(const name of radios){
     const el=document.querySelector(`[name="${name}"]:checked`);
     data[name]=el?el.value:"";
