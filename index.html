@@ -117,6 +117,8 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
 .ty-glyph{font-family:'JetBrains Mono',monospace;font-size:32px;color:var(--acc);margin-bottom:28px;display:block}
 .ty-title{font-family:'Syne',sans-serif;font-weight:800;font-size:36px;margin-bottom:14px;letter-spacing:-.02em}
 .ty-body{font-size:14px;font-weight:300;color:var(--txt2);max-width:380px;margin:0 auto;line-height:1.7}
+.ty-downloads{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+.ty-downloads a{text-decoration:none}
 
 /* Responsive */
 @media(max-width:520px){
@@ -532,6 +534,10 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
   <span class="ty-glyph">◈</span>
   <h2 class="ty-title" data-key="tyh">Listo.</h2>
   <p class="ty-body" data-key="typ">Tus respuestas han sido enviadas. Diego las revisará y comenzará a construir tu agente personal.</p>
+  <div class="ty-downloads" id="tyDownloads" hidden>
+    <a class="btn btn-primary" id="dlSoul" href="#" target="_blank" rel="noopener"><span data-key="dl_soul">Descargar SOUL.md</span></a>
+    <a class="btn btn-ghost" id="dlDesign" href="#" target="_blank" rel="noopener"><span data-key="dl_design">Descargar Agent-Design.md</span></a>
+  </div>
 </div>
 </main>
 
@@ -596,12 +602,13 @@ es:{
   personal_lbl:"Proyectos personales",personal_hint:"Nómbralos y descríbelos brevemente.",personal_ph:"Ej: Estoy desarrollando una app, tengo un proyecto de fotografía personal…",
   bnxt:"Continuar →",bbck:"← Atrás",bsub:"Enviar respuestas →",
   tyh:"Listo.",typ:"Tus respuestas han sido enviadas. Diego las revisará y comenzará a construir tu agente personal.",
+  dl_soul:"Descargar SOUL.md",dl_design:"Descargar Agent-Design.md",
   sending:"Enviando…",err:"Error — intenta de nuevo",
   ty_messages:["Tu agente se está cocinando, se vienen cositas™","NPC convertido en protagonista.","Achievement unlocked: Primer empleado que no pide café.","Tu agente ya está haciendo estiramientos.","Las máquinas han tomado nota. No te preocupes… todavía."],
   areas:["Edición de Video","Motion Graphics / VFX","Diseño Gráfico","Contenido para Redes","Dirección Creativa","Estrategia / Planeación","Gestión de Proyectos","Administración / Operaciones"],
   tenure:["Menos de 6 meses","6 a 12 meses","1 a 2 años","Más de 2 años"],
   tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Claude Code","OpenCode","Hermes Agent","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / código"],
-  os:["Windows","macOS","Ambos","Mobile (principalmente)"],
+  os:["Windows","macOS","Linux","Varios (combino más de uno)","Mobile (principalmente)"],
   tech:["Básico — uso lo que me piden y ya","Intermedio — exploro herramientas cuando me las recomiendan","Avanzado — aprendo herramientas nuevas activamente","Experto — configuro sistemas, puedo escribir código o scripts"],
   ai_exp:["Nunca las he usado","Las uso ocasionalmente","Las uso todos los días","Las uso y también las integro en mis flujos de trabajo"],
   terminal:["Sí, con comodidad","No, nunca la uso","Un poco — sé los básicos","No, pero me interesa aprender"],
@@ -675,12 +682,13 @@ en:{
   personal_lbl:"Personal projects",personal_hint:"Name them and describe them briefly.",personal_ph:"e.g. I'm building an app, I have a personal photography project…",
   bnxt:"Continue →",bbck:"← Back",bsub:"Submit responses →",
   tyh:"Done.",typ:"Your responses have been sent. Diego will review them and start building your personal agent.",
+  dl_soul:"Download SOUL.md",dl_design:"Download Agent-Design.md",
   sending:"Sending…",err:"Error — try again",
   ty_messages:["Your agent is cooking.","NPC promoted to main character.","Achievement unlocked: First employee who doesn't need coffee.","Born to automate. Forced to fill forms.","We got your agent before GTA VI.","Your agent is warming up.","The machines have received your request. Don't panic… yet."],
   areas:["Video Editing / Production","Motion Graphics / VFX","Graphic Design","Social Media Content","Creative Direction","Strategy / Planning","Project Management","Admin / Operations"],
   tenure:["Less than 6 months","6 to 12 months","1 to 2 years","More than 2 years"],
   tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Claude Code","OpenCode","Hermes Agent","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / code"],
-  os:["Windows","macOS","Both","Mobile (mainly)"],
+  os:["Windows","macOS","Linux","Multiple (I use more than one)","Mobile (mainly)"],
   tech:["Basic — I use what I'm told and that's it","Intermediate — I explore tools when recommended","Advanced — I actively learn new tools","Expert — I configure systems, can write code or scripts"],
   ai_exp:["Never used them","Occasionally","Every day","I use them and integrate them into my workflows"],
   terminal:["Yes, comfortably","No, never","A little — I know the basics","No, but I'd like to learn"],
@@ -914,6 +922,38 @@ function pickTyMessage(){
   return msgs[Math.floor(Math.random()*msgs.length)];
 }
 
+// The POST above uses mode:"no-cors" so the response body can never be read —
+// that's required for Apps Script Web Apps (see README). To still get the
+// submitter their generated file links, fetch them separately via JSONP
+// (a <script> tag load isn't subject to CORS), keyed by agent name.
+function fetchDownloadLinks(agentName){
+  return new Promise(function(resolve){
+    const cbName="hermesLinksCb_"+Date.now();
+    const timeout=setTimeout(function(){cleanup();resolve(null);},8000);
+    function cleanup(){
+      delete window[cbName];
+      if(script.parentNode)script.parentNode.removeChild(script);
+      clearTimeout(timeout);
+    }
+    window[cbName]=function(resp){
+      cleanup();
+      resolve(resp&&resp.success?resp:null);
+    };
+    const script=document.createElement("script");
+    script.src=APPS_SCRIPT_URL+"?action=links&agent="+encodeURIComponent(agentName)+"&callback="+cbName;
+    script.onerror=function(){cleanup();resolve(null);};
+    document.body.appendChild(script);
+  });
+}
+
+async function showDownloadLinks(agentName){
+  const links=await fetchDownloadLinks(agentName);
+  if(!links)return; // best-effort — no links is not an error the user needs to see
+  document.getElementById("dlSoul").href=links.soulUrl;
+  document.getElementById("dlDesign").href=links.designUrl;
+  document.getElementById("tyDownloads").hidden=false;
+}
+
 // Submit
 document.getElementById("form").addEventListener("submit",async function(e){
   e.preventDefault();
@@ -926,6 +966,7 @@ document.getElementById("form").addEventListener("submit",async function(e){
     document.querySelector(".ty-body").textContent=pickTyMessage();
     document.getElementById("thankyou").classList.add("show");
     document.getElementById("progFill").style.width="100%";
+    showDownloadLinks(data.agente_nombre||data.nombre);
   }catch(err){
     console.error("Submit error:",err);
     btn.textContent=T[lang].err;

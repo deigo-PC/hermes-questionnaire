@@ -47,7 +47,24 @@ function doPost(e) {
   }
 }
 
+// The form's POST uses mode:"no-cors" (required for Apps Script Web Apps —
+// see README), which means the browser can never read that response. To
+// still hand the submitter download links for their generated files, the
+// client makes a follow-up JSONP GET here (script-tag load, not subject to
+// CORS) right after the POST resolves, asking for the links by agent name.
 function doGet(e) {
+  const params = (e && e.parameter) || {};
+  if (params.action === "links") {
+    const callback = params.callback;
+    const result = getAgentDocLinks(params.agent || "");
+    const body = JSON.stringify(result);
+    if (callback) {
+      return ContentService
+        .createTextOutput(callback + "(" + body + ")")
+        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+    return ContentService.createTextOutput(body).setMimeType(ContentService.MimeType.JSON);
+  }
   return ContentService
     .createTextOutput(JSON.stringify({ success: false, error: "Use POST" }))
     .setMimeType(ContentService.MimeType.JSON);
@@ -65,24 +82,44 @@ function extractKey(header) {
 }
 
 const OUTPUT_FOLDER_NAME = "Hermes Agent — SOUL Files";
+const SOUL_FILENAME = "SOUL.md";
+const DESIGN_FILENAME = "Agent-Design.md";
 
-// Writes <agent>-SOUL.md and <agent>-Agent-Design.md to Drive for one submission.
-// Section structure follows the spreadsheet's own "🗺️ Mapeo SOUL.md" tab:
-// SOUL.md stays the tight, always-loaded persona/behavior file; Agent-Design.md
-// is the one-time build/ops brief (work context, recurring tasks, automation
-// targets, growth goals, deployment prefs) — reference material, not something
-// reloaded every turn.
+function safeFolderName(name) {
+  return (name || "").toString().replace(/[\\\/:*?"<>|]/g, "").trim() || "agente";
+}
+
+// Writes SOUL.md and Agent-Design.md to a per-agent Drive subfolder for one
+// submission. Section structure follows the spreadsheet's own "🗺️ Mapeo
+// SOUL.md" tab: SOUL.md stays the tight, always-loaded persona/behavior file;
+// Agent-Design.md is the one-time build/ops brief (work context, recurring
+// tasks, automation targets, growth goals, deployment prefs) — reference
+// material, not something reloaded every turn.
+// Returns {soulUrl, designUrl} — direct-download Drive links for the submitter.
 function generateAgentDocs(data) {
-  const folder = getOrCreateOutputFolder();
   const person = data.nombre || "Sin nombre";
   const agentName = data.agente_nombre || person;
-  const safeAgentName = agentName.toString().replace(/[\\\/:*?"<>|]/g, "").trim() || "agente";
+  const agentFolder = getOrCreateAgentFolder(agentName);
 
   const soul = buildSoulMd(data, person, agentName);
   const design = buildAgentDesignMd(data, person, agentName);
 
-  folder.createFile(safeAgentName + "-SOUL.md", soul, MimeType.PLAIN_TEXT);
-  folder.createFile(safeAgentName + "-Agent-Design.md", design, MimeType.PLAIN_TEXT);
+  const soulFile = replaceFile(agentFolder, SOUL_FILENAME, soul);
+  const designFile = replaceFile(agentFolder, DESIGN_FILENAME, design);
+
+  return {
+    soulUrl: downloadUrl(soulFile),
+    designUrl: downloadUrl(designFile)
+  };
+}
+
+// One subfolder per agent, e.g. "Hermes Agent — SOUL Files/Talan/".
+function getOrCreateAgentFolder(agentName) {
+  const root = getOrCreateOutputFolder();
+  const name = safeFolderName(agentName);
+  const existing = root.getFoldersByName(name);
+  if (existing.hasNext()) return existing.next();
+  return root.createFolder(name);
 }
 
 function getOrCreateOutputFolder() {
@@ -92,6 +129,51 @@ function getOrCreateOutputFolder() {
   const existing = parent.getFoldersByName(OUTPUT_FOLDER_NAME);
   if (existing.hasNext()) return existing.next();
   return parent.createFolder(OUTPUT_FOLDER_NAME);
+}
+
+// Re-submitting the same agent replaces the previous file instead of piling
+// up duplicates, and makes the JSONP lookup below unambiguous.
+function replaceFile(folder, filename, content) {
+  const old = folder.getFilesByName(filename);
+  while (old.hasNext()) old.next().setTrashed(true);
+  const file = folder.createFile(filename, content, MimeType.PLAIN_TEXT);
+  // These files contain personal onboarding info (background, work patterns,
+  // never-do rules, etc.) — share with the coordenadas.co domain only, not
+  // the whole internet. Falls back to anyone-with-link only if this Drive
+  // isn't actually on a Workspace domain (DOMAIN_WITH_LINK would throw).
+  try {
+    file.setSharing(DriveApp.Access.DOMAIN_WITH_LINK, DriveApp.Permission.VIEW);
+  } catch (shareErr) {
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  }
+  return file;
+}
+
+function downloadUrl(file) {
+  return "https://drive.google.com/uc?export=download&id=" + file.getId();
+}
+
+// Looks up the (already-generated, in this same execution's very recent
+// past) SOUL.md/Agent-Design.md links for an agent name, for the client's
+// follow-up JSONP GET after its no-cors POST resolves.
+function getAgentDocLinks(agentName) {
+  try {
+    const name = safeFolderName(agentName);
+    const root = getOrCreateOutputFolder();
+    const folders = root.getFoldersByName(name);
+    if (!folders.hasNext()) return { success: false, error: "not found" };
+    const folder = folders.next();
+    const soulFiles = folder.getFilesByName(SOUL_FILENAME);
+    const designFiles = folder.getFilesByName(DESIGN_FILENAME);
+    if (!soulFiles.hasNext() || !designFiles.hasNext()) return { success: false, error: "not found" };
+    return {
+      success: true,
+      soulUrl: downloadUrl(soulFiles.next()),
+      designUrl: downloadUrl(designFiles.next())
+    };
+  } catch (err) {
+    return { success: false, error: err.toString() };
+  }
 }
 
 function field(data, key, fallback) {
