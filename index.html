@@ -142,6 +142,8 @@ select{cursor:pointer}
 .howto-steps{list-style:none;display:flex;flex-direction:column;gap:11px}
 .howto-steps li{display:flex;gap:11px;align-items:flex-start;font-size:13px;color:var(--txt2);line-height:1.55}
 .howto-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--acc);color:#0B0A08;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.howto-key{margin-top:14px;text-align:center}
+.howto-key .field-diagram{margin:0;text-align:left}
 .dl-hint{font-size:11px;color:var(--txt3);margin-top:8px}
 
 /* Responsive */
@@ -647,6 +649,26 @@ acceso de forma segura:
     </ol>
   </div>
 
+  <div class="howto howto-key" id="keyBox" hidden>
+    <p class="howto-title" data-key="key_title">🔑 Antes de que tu agente pueda responder</p>
+    <pre class="field-diagram" data-key="key_diagram">opencode.ai/auth
+      │
+      ▼
+Suscríbete al plan Go — $10 USD/mes
+      │
+      ▼
+Copia tu API key
+      │
+      ▼
+Envíasela a Diego de forma segura
+(no la pegues aquí ni la compartas
+ por chat abierto)
+
+Sin esta clave tu agente no puede
+pensar — es el modelo de IA que
+elegiste en el paso anterior.</pre>
+  </div>
+
   <div class="ty-downloads" id="tyDownloads" hidden>
     <div>
       <a class="btn btn-primary" id="dlZip" href="#" target="_blank" rel="noopener"><span data-key="dl_zip">Descargar tus archivos (.zip)</span></a>
@@ -749,6 +771,8 @@ es:{
   howto_2:"Copia el mensaje de onboarding (más abajo) con el botón \"Copiar\".",
   howto_3:"Cuando Diego termine de desplegar tu agente, abre el chat con él (Telegram u otro).",
   howto_4:"Pega el mensaje. Tu agente guardará su identidad (SOUL.md) y aprenderá sobre ti automáticamente.",
+  key_title:"🔑 Antes de que tu agente pueda responder",
+  key_diagram:"opencode.ai/auth\n      │\n      ▼\nSuscríbete al plan Go — $10 USD/mes\n      │\n      ▼\nCopia tu API key\n      │\n      ▼\nEnvíasela a Diego de forma segura\n(no la pegues aquí ni la compartas\n por chat abierto)\n\nSin esta clave tu agente no puede\npensar — es el modelo de IA que\nelegiste en el paso anterior.",
   sending:"Enviando…",err:"Error — intenta de nuevo",
   ty_messages:["Tu agente se está cocinando, se vienen cositas™","NPC convertido en protagonista.","Achievement unlocked: Primer empleado que no pide café.","Tu agente ya está haciendo estiramientos.","Las máquinas han tomado nota. No te preocupes… todavía."],
   areas:["Edición de Video","Motion Graphics / VFX","Diseño Gráfico","Contenido para Redes","Dirección Creativa","Estrategia / Planeación","Gestión de Proyectos","Administración / Operaciones"],
@@ -855,6 +879,8 @@ en:{
   howto_2:"Copy the onboarding message (further below) with the \"Copy\" button.",
   howto_3:"Once Diego finishes deploying your agent, open the chat with it (Telegram or wherever it's set up).",
   howto_4:"Paste the message. Your agent will save its identity (SOUL.md) and learn about you automatically.",
+  key_title:"🔑 Before your agent can respond",
+  key_diagram:"opencode.ai/auth\n      │\n      ▼\nSubscribe to the Go plan — $10 USD/month\n      │\n      ▼\nCopy your API key\n      │\n      ▼\nSend it to Diego securely\n(don't paste it here or share it\n over an open chat)\n\nWithout this key your agent can't\nthink — it's the AI model you\npicked in the previous step.",
   sending:"Sending…",err:"Error — try again",
   ty_messages:["Your agent is cooking.","NPC promoted to main character.","Achievement unlocked: First employee who doesn't need coffee.","Born to automate. Forced to fill forms.","We got your agent before GTA VI.","Your agent is warming up.","The machines have received your request. Don't panic… yet."],
   areas:["Video Editing / Production","Motion Graphics / VFX","Graphic Design","Social Media Content","Creative Direction","Strategy / Planning","Project Management","Admin / Operations"],
@@ -1199,6 +1225,7 @@ async function showDownloadLinks(agentName){
   document.getElementById("dlZip").href=links.zipUrl;
   document.getElementById("tyDownloads").hidden=false;
   document.getElementById("howtoBox").hidden=false;
+  document.getElementById("keyBox").hidden=false;
   if(links.onboardingPrompt){
     document.getElementById("promptBoxText").value=links.onboardingPrompt;
     document.getElementById("promptBox").hidden=false;
