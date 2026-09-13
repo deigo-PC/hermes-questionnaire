@@ -154,7 +154,7 @@ select{cursor:pointer}
     </svg>
     <span class="wordmark">coordenadas.co</span>
   </div>
-  <div class="step-ctr"><em id="stepNum">01</em>&thinsp;/&thinsp;10</div>
+  <div class="step-ctr"><em id="stepNum">01</em>&thinsp;/&thinsp;11</div>
   <div class="lang-tgl">
     <button class="lang-btn active" id="btn-es" onclick="setLang('es')">ES</button>
     <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
@@ -558,11 +558,54 @@ Email      → gratis, no es al instante</pre>
   </div>
 </div>
 
-<!-- ══ STEP 10 — ALGO MÁS ══ -->
+<!-- ══ STEP 10 — CONEXIÓN DE EMAIL ══ -->
 <div class="step" data-step="10">
-  <div class="eyebrow" data-key="s10e">ALGO MÁS</div>
-  <h1 class="sec-title" data-key="s10h">¿Qué más deberíamos saber?</h1>
-  <p class="field-note" data-key="s10note">Antes de enviar, tómate un momento. Piensa en lo que acabas de responder: tus tareas, lo que se te olvida, ese proyecto personal que quedó pausado por falta de tiempo o de saber cómo seguir. Tu agente puede ayudarte con eso también, no solo con lo obvio. ¿Hay algo que no encajó en las preguntas anteriores? ¿Un proceso que sabes que está roto pero nunca has dicho en voz alta? ¿Algo que aprendiste a medias y quedó ahí? Este es el espacio para eso.</p>
+  <div class="eyebrow" data-key="s10e">CONEXIÓN DE EMAIL</div>
+  <h1 class="sec-title" data-key="s10h">¿Conectamos tu correo?</h1>
+  <p class="sec-sub" data-key="s10s">Opcional. Tu agente puede leer y responder tu correo — desde algo básico hasta manejar Calendar, Drive, Sheets y Docs.</p>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">41</span><span class="flabel" data-key="q41">¿Qué tanto acceso a tu correo quieres darle a tu agente?</span></div>
+    <div class="opt-grid col1" id="g-emailaccess">
+      <label class="opt-item"><input type="radio" name="email_acceso" value="Completo" data-reveals="rv-email-details"><span data-key="ea_full">Acceso completo — Gmail, Calendar, Drive, Sheets y Docs</span></label>
+      <label class="opt-item"><input type="radio" name="email_acceso" value="Básico" data-reveals="rv-email-details"><span data-key="ea_basic">Básico — solo leer y responder correos</span></label>
+      <label class="opt-item"><input type="radio" name="email_acceso" value="No por ahora"><span data-key="ea_no">No por ahora</span></label>
+      <label class="opt-item"><input type="radio" name="email_acceso" value="No sé"><span data-key="ea_dk">No sé / no entiendo esta pregunta</span></label>
+    </div>
+
+    <div id="rv-email-details" class="other-reveal">
+      <pre class="field-diagram" data-key="q41_note">No escribas tu contraseña aquí — este formulario no la necesita.
+
+Esto solo registra tu preferencia. Cuando tu agente esté listo,
+Diego (o el agente mismo, por chat) te va a pedir autorizar el
+acceso de forma segura:
+
+  · Básico    → una "contraseña de aplicación" que generas tú
+                mismo en tu cuenta, no tu contraseña real
+  · Completo  → inicio de sesión seguro con Google (OAuth),
+                sin compartir tu contraseña con nadie</pre>
+
+      <div class="field" style="margin-top:16px">
+        <div class="field-head"><span class="fnum">41b</span><span class="flabel" data-key="q41b">¿Qué proveedor de correo usas?</span></div>
+        <div class="opt-grid col1" id="g-emailprovider"></div>
+        <div id="rv-email-provider-otro" class="other-reveal">
+          <input type="text" name="email_proveedor_otro" data-ph="email_provider_otro_ph" placeholder="¿Cuál proveedor?">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button type="button" class="btn btn-ghost" onclick="go(9)" data-key="bbck">← Atrás</button>
+    <button type="button" class="btn btn-primary" onclick="go(11)" data-key="bnxt">Continuar →</button>
+  </div>
+</div>
+
+<!-- ══ STEP 11 — ALGO MÁS ══ -->
+<div class="step" data-step="11">
+  <div class="eyebrow" data-key="s11e">ALGO MÁS</div>
+  <h1 class="sec-title" data-key="s11h">¿Qué más deberíamos saber?</h1>
+  <p class="field-note" data-key="s11note">Antes de enviar, tómate un momento. Piensa en lo que acabas de responder: tus tareas, lo que se te olvida, ese proyecto personal que quedó pausado por falta de tiempo o de saber cómo seguir. Tu agente puede ayudarte con eso también, no solo con lo obvio. ¿Hay algo que no encajó en las preguntas anteriores? ¿Un proceso que sabes que está roto pero nunca has dicho en voz alta? ¿Algo que aprendiste a medias y quedó ahí? Este es el espacio para eso.</p>
 
   <div class="field">
     <div class="field-head"><span class="fnum">40</span><span class="flabel" data-key="q40">Cuéntanos lo que quieras</span><span class="fopt" data-key="optl">opcional</span></div>
@@ -570,7 +613,7 @@ Email      → gratis, no es al instante</pre>
   </div>
 
   <div class="nav">
-    <button type="button" class="btn btn-ghost" onclick="go(9)" data-key="bbck">← Atrás</button>
+    <button type="button" class="btn btn-ghost" onclick="go(10)" data-key="bbck">← Atrás</button>
     <button type="submit" class="btn btn-primary" id="submitBtn" data-key="bsub">Enviar respuestas →</button>
   </div>
 </div>
@@ -602,7 +645,8 @@ es:{
   s7e:"TU AGENTE — PERSONALIZACIÓN",s7h:"Quién es tu agente.",s7s:"Define la identidad, personalidad y carácter de tu agente personal.",
   s8e:"CRECIMIENTO",s8h:"Hacia dónde vas.",s8s:"Esta sección es opcional, pero ayuda a que tu agente pueda acompañar tu desarrollo a largo plazo.",
   s9e:"CONFIG TÉCNICA",s9h:"Cómo desplegamos tu agente.",s9s:"Últimos detalles técnicos. Si no entiendes alguna pregunta, elige \"No sé\" — no pasa nada.",
-  s10e:"ALGO MÁS",s10h:"¿Qué más deberíamos saber?",
+  s10e:"CONEXIÓN DE EMAIL",s10h:"¿Conectamos tu correo?",s10s:"Opcional. Tu agente puede leer y responder tu correo — desde algo básico hasta manejar Calendar, Drive, Sheets y Docs.",
+  s11e:"ALGO MÁS",s11h:"¿Qué más deberíamos saber?",
   q01:"Nombre completo",q01p:"Tu nombre completo",
   q02:"Email de trabajo",q02p:"tu@coordenadas.co",
   q03:"Rol en Coordenadas",q03p:"Ej: Editor de video, Diseñador gráfico, Productor…",
@@ -649,7 +693,15 @@ es:{
   q36_note:"Telegram   → gratis, recomendado\nWhatsApp   → $$ cobra por mensaje\nDiscord    → gratis (si tu equipo ya lo usa)\nSlack      → gratis (si tu equipo ya lo usa)\nEmail      → gratis, no es al instante",
   q38_note:"Tu agente necesita OpenCode Go\n  → $10 USD/mes (obligatorio)\n\n  [1] económico · empieza aquí\n      DeepSeek-V4-Flash / GLM-5.3-flash\n      menos tokens\n\n  [2] mejor razonamiento\n      DeepSeek-V4-pto / GLM-5.3\n      más tokens → más costo",
   q40:"Cuéntanos lo que quieras",q40p:"Escribe lo que quieras — no hay respuesta incorrecta.",
-  s10note:"Antes de enviar, tómate un momento. Piensa en lo que acabas de responder: tus tareas, lo que se te olvida, ese proyecto personal que quedó pausado por falta de tiempo o de saber cómo seguir. Tu agente puede ayudarte con eso también, no solo con lo obvio. ¿Hay algo que no encajó en las preguntas anteriores? ¿Un proceso que sabes que está roto pero nunca has dicho en voz alta? ¿Algo que aprendiste a medias y quedó ahí? Este es el espacio para eso.",
+  s11note:"Antes de enviar, tómate un momento. Piensa en lo que acabas de responder: tus tareas, lo que se te olvida, ese proyecto personal que quedó pausado por falta de tiempo o de saber cómo seguir. Tu agente puede ayudarte con eso también, no solo con lo obvio. ¿Hay algo que no encajó en las preguntas anteriores? ¿Un proceso que sabes que está roto pero nunca has dicho en voz alta? ¿Algo que aprendiste a medias y quedó ahí? Este es el espacio para eso.",
+  q41:"¿Qué tanto acceso a tu correo quieres darle a tu agente?",
+  ea_full:"Acceso completo — Gmail, Calendar, Drive, Sheets y Docs",
+  ea_basic:"Básico — solo leer y responder correos",
+  ea_no:"No por ahora",
+  ea_dk:"No sé / no entiendo esta pregunta",
+  q41_note:"No escribas tu contraseña aquí — este formulario no la necesita.\n\nEsto solo registra tu preferencia. Cuando tu agente esté listo,\nDiego (o el agente mismo, por chat) te va a pedir autorizar el\nacceso de forma segura:\n\n  · Básico    → una \"contraseña de aplicación\" que generas tú\n                mismo en tu cuenta, no tu contraseña real\n  · Completo  → inicio de sesión seguro con Google (OAuth),\n                sin compartir tu contraseña con nadie",
+  q41b:"¿Qué proveedor de correo usas?",
+  email_provider_otro_ph:"¿Cuál proveedor?",
   tz_yes:"Sí, trabajo en otra zona horaria",tz_no:"No, uso America/Bogotá",tz_dk:"No sé",
   optl:"opcional",optl2:"opcional",
   otro_opt:"Otro",
@@ -666,6 +718,7 @@ es:{
   tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Claude Code","OpenCode","Hermes Agent","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / código"],
   deviceTypes:["Teléfono","Laptop","PC (Torre)","Servidor","Tablet","Otro"],
   deviceOs:["Windows","macOS","Linux","Android","iOS","Otro"],
+  emailProviders:["Gmail","Outlook / Microsoft 365","Yahoo","Fastmail","ProtonMail","Otro"],
   os:["Windows","macOS","Linux","Mobile"],
   tech:["Básico — uso lo que me piden y ya","Intermedio — exploro herramientas cuando me las recomiendan","Avanzado — aprendo herramientas nuevas activamente","Experto — configuro sistemas, puedo escribir código o scripts"],
   ai_exp:["Nunca las he usado","Las uso ocasionalmente","Las uso todos los días","Las uso y también las integro en mis flujos de trabajo"],
@@ -691,7 +744,8 @@ en:{
   s7e:"YOUR AGENT — PERSONALITY",s7h:"Who your agent is.",s7s:"Define the identity, personality, and character of your personal agent.",
   s8e:"GROWTH",s8h:"Where you're headed.",s8s:"This section is optional, but helps your agent support your development long-term.",
   s9e:"TECH SETUP",s9h:"How we'll deploy your agent.",s9s:"A few last technical details. If a question doesn't make sense to you, pick \"I don't know\" — that's fine.",
-  s10e:"ONE MORE THING",s10h:"What else should we know?",
+  s10e:"EMAIL CONNECTION",s10h:"Should we connect your email?",s10s:"Optional. Your agent can read and reply to your email — anything from basic to handling Calendar, Drive, Sheets, and Docs.",
+  s11e:"ONE MORE THING",s11h:"What else should we know?",
   q01:"Full name",q01p:"Your full name",
   q02:"Work email",q02p:"you@coordenadas.co",
   q03:"Role at Coordenadas",q03p:"e.g. Video Editor, Graphic Designer, Producer…",
@@ -738,7 +792,15 @@ en:{
   q36_note:"Telegram   → free, recommended\nWhatsApp   → $$ charges per message\nDiscord    → free (only if your team uses it)\nSlack      → free (only if your team uses it)\nEmail      → free, not real-time",
   q38_note:"Your agent needs OpenCode Go\n  → $10 USD/month (required)\n\n  [1] economical · start here\n      DeepSeek-V4-Flash / GLM-5.3-flash\n      fewer tokens\n\n  [2] better reasoning\n      DeepSeek-V4-pto / GLM-5.3\n      more tokens → more cost",
   q40:"Tell us whatever you want",q40p:"Write whatever you want — there's no wrong answer.",
-  s10note:"Before you submit, take a moment. Think back over what you just answered — your tasks, the things that slip through, that personal project that stalled because you ran out of time or didn't know how to keep going. Your agent can help with that too, not just the obvious stuff. Is there anything that didn't fit into the questions above? A process you know is broken but have never said out loud? Something you half-learned and left there? This is the space for that.",
+  s11note:"Before you submit, take a moment. Think back over what you just answered — your tasks, the things that slip through, that personal project that stalled because you ran out of time or didn't know how to keep going. Your agent can help with that too, not just the obvious stuff. Is there anything that didn't fit into the questions above? A process you know is broken but have never said out loud? Something you half-learned and left there? This is the space for that.",
+  q41:"How much access to your email do you want to give your agent?",
+  ea_full:"Full access — Gmail, Calendar, Drive, Sheets, and Docs",
+  ea_basic:"Basic — just read and reply to emails",
+  ea_no:"Not for now",
+  ea_dk:"I don't know / I don't understand this question",
+  q41_note:"Don't type your password here — this form doesn't need it.\n\nThis only records your preference. Once your agent is ready,\nDiego (or the agent itself, by chat) will ask you to authorize\naccess securely:\n\n  · Basic  → an \"app password\" you generate yourself in your\n             own account, not your real password\n  · Full   → a secure sign-in with Google (OAuth), without\n             sharing your password with anyone",
+  q41b:"What email provider do you use?",
+  email_provider_otro_ph:"Which provider?",
   tz_yes:"Yes, I work in a different timezone",tz_no:"No, I'm on America/Bogotá",tz_dk:"I don't know",
   optl:"optional",optl2:"optional",
   otro_opt:"Other",
@@ -755,6 +817,7 @@ en:{
   tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Claude Code","OpenCode","Hermes Agent","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / code"],
   deviceTypes:["Phone","Laptop","PC (Tower)","Server","Tablet","Other"],
   deviceOs:["Windows","macOS","Linux","Android","iOS","Other"],
+  emailProviders:["Gmail","Outlook / Microsoft 365","Yahoo","Fastmail","ProtonMail","Other"],
   os:["Windows","macOS","Linux","Mobile"],
   tech:["Basic — I use what I'm told and that's it","Intermediate — I explore tools when recommended","Advanced — I actively learn new tools","Expert — I configure systems, can write code or scripts"],
   ai_exp:["Never used them","Occasionally","Every day","I use them and integrate them into my workflows"],
@@ -772,7 +835,7 @@ en:{
 }};
 
 let lang="es",step=1;
-const TOTAL=10;
+const TOTAL=11;
 
 // Build grids
 function buildGrid(id,optKey,name,type,revealId){
@@ -806,6 +869,7 @@ function buildAllGrids(){
   buildGrid("g-reslen","reslen","agente_reslen","radio",null);
   buildGrid("g-chatplat","chatplat","plataforma_chat","radio","rv-chatplat");
   buildGrid("g-modelpref","modelpref","pref_modelo_ia","radio","rv-modelpref");
+  buildGrid("g-emailprovider","emailProviders","email_proveedor","radio","rv-email-provider-otro");
 }
 
 // Devices (Q11b) — a repeatable list, not a fixed option grid, so it's
@@ -1001,7 +1065,10 @@ function collectFormData(){
     zona_horaria_otro:document.querySelector('[name="zona_horaria_otro"]')?.value||"",
     pref_modelo_ia:"",
     contexto_adicional:document.querySelector('[name="contexto_adicional"]')?.value||"",
-    dispositivos:serializeDevices()
+    dispositivos:serializeDevices(),
+    email_acceso:"",
+    email_proveedor:"",
+    email_proveedor_otro:document.querySelector('[name="email_proveedor_otro"]')?.value||""
   };
   // Collect checkbox grids (comma-separated, merge "Other" values)
   const grids=[
@@ -1021,7 +1088,7 @@ function collectFormData(){
     data[g.name]=checked.join(", ");
   }
   // Collect radio groups (single select)
-  const radios=["tiempo_coord","nivel_tech","exp_ai","usa_terminal","directividad","idioma","proactividad","agente_genero","agente_humor","agente_trato","agente_reslen","plataforma_chat","zona_horaria","pref_modelo_ia"];
+  const radios=["tiempo_coord","nivel_tech","exp_ai","usa_terminal","directividad","idioma","proactividad","agente_genero","agente_humor","agente_trato","agente_reslen","plataforma_chat","zona_horaria","pref_modelo_ia","email_acceso","email_proveedor"];
   for(const name of radios){
     const el=document.querySelector(`[name="${name}"]:checked`);
     data[name]=el?el.value:"";
@@ -1043,6 +1110,10 @@ function collectFormData(){
   const modelOtroEl=document.querySelector('[name="pref_modelo_ia_otro"]');
   if(data.pref_modelo_ia==="Otro"&&modelOtroEl?.value){
     data.pref_modelo_ia=modelOtroEl.value;
+  }
+  // Email provider "Otro" → use typed text
+  if(data.email_proveedor==="Otro"&&data.email_proveedor_otro){
+    data.email_proveedor=data.email_proveedor_otro;
   }
   return data;
 }

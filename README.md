@@ -17,7 +17,7 @@ The form is **bilingual (Spanish / English)**, **zero-dependency** (a single HTM
 ## How It Works
 
 ```
-Team member fills the form (GitHub Pages, 10 steps)
+Team member fills the form (GitHub Pages, 11 steps)
         ↓  POST with mode: "no-cors", body: JSON (text/plain)
 Google Apps Script Web App (doPost handler)
         ↓  maps each column header → field name, appends a row
@@ -70,5 +70,6 @@ Open the live form, fill it out, and submit. The row should appear in the spread
 - The script matches columns dynamically by the `(field_name)` suffix, so columns can be added/reordered as long as the suffix matches the form's field names.
 - To add a new field: add the field to the form's `collectFormData()` in `index.html`, add a matching column header in the spreadsheet, and add the name to the `fields` array in `extractKey` in `APPS_SCRIPT_CODE.gs`.
 - The `ID (formspree_id)` and `Fuente (fuente)` columns were previously always blank — the form sent them, but `extractKey`'s `fields` allowlist didn't include them. Fixed as of this update.
-- Step 9 adds `plataforma_chat`, `zona_horaria`, `zona_horaria_otro`, `pref_modelo_ia`, `pref_modelo_ia_otro` to the payload, and Q11b adds `dispositivos`. `extractKey` already recognizes all of them; add matching columns to the sheet whenever convenient — none of this is required for the generated `.md` files, which read straight from the submitted payload, not from the sheet.
+- Step 9 adds `plataforma_chat`, `zona_horaria`, `zona_horaria_otro`, `pref_modelo_ia`, `pref_modelo_ia_otro` to the payload, Q11b adds `dispositivos`, and Step 10 adds `email_acceso`, `email_proveedor`, `email_proveedor_otro`. `extractKey` already recognizes all of them; add matching columns to the sheet whenever convenient — none of this is required for the generated `.md` files, which read straight from the submitted payload, not from the sheet.
 - Q11b ("¿Qué dispositivos tienes?", `dispositivos`) is a repeatable device list, not a fixed option grid — each row picks a device type and an OS from a dropdown (with "Otro" free text), and submits as a single comma-joined string like `Laptop (macOS), PC (Torre) (Windows)`. Handled separately from `buildGrid()` in `index.html`'s `renderDeviceRows()`/`serializeDevices()`, since it needs add/remove rows rather than a fixed set of checkboxes.
+- Step 10 ("Conexión de email") asks how much email/Google Workspace access the person wants their agent to have (none / basic read-reply / full Gmail+Calendar+Drive+Sheets+Docs) and which provider they use — **it deliberately never collects any password, app password, or OAuth token**. The field-diagram note on that step says so explicitly to the user. Real credential setup (an IMAP app password for "basic," a Google OAuth consent flow for "full") happens later, directly between the person and their deployed agent — this questionnaire only records the preference so Diego knows what to set up.

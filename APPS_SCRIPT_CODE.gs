@@ -72,7 +72,7 @@ function doGet(e) {
 
 function extractKey(header) {
   const cleaned = header.toString().replace(/[\r\n]+/g, " ").toLowerCase();
-  var fields = ["formspree_id","fuente","nombre","_replyto","rol","area_trabajo","area_otro","edad","trayectoria","tiempo_coord","tenure_otro","clientes","proyectos","proyectos_personales","semana_tipica","herramientas","tools_otro","sistema_op","sistema_op_otro","nivel_tech","exp_ai","usa_terminal","tareas_diarias","tareas_semanales","tareas_mensuales","proc_repetitivos","automatizar","info_repetitiva","se_pierde","directividad","idioma","proactividad","nunca","agente_nombre","agente_nombre_razon","agente_genero","agente_arquetipo","agente_humor","agente_trato","apodo","agente_reslen","habilidades","aprendizaje","apoyo","plataforma_chat","zona_horaria","zona_horaria_otro","pref_modelo_ia","pref_modelo_ia_otro","contexto_adicional","dispositivos"];
+  var fields = ["formspree_id","fuente","nombre","_replyto","rol","area_trabajo","area_otro","edad","trayectoria","tiempo_coord","tenure_otro","clientes","proyectos","proyectos_personales","semana_tipica","herramientas","tools_otro","sistema_op","sistema_op_otro","nivel_tech","exp_ai","usa_terminal","tareas_diarias","tareas_semanales","tareas_mensuales","proc_repetitivos","automatizar","info_repetitiva","se_pierde","directividad","idioma","proactividad","nunca","agente_nombre","agente_nombre_razon","agente_genero","agente_arquetipo","agente_humor","agente_trato","apodo","agente_reslen","habilidades","aprendizaje","apoyo","plataforma_chat","zona_horaria","zona_horaria_otro","pref_modelo_ia","pref_modelo_ia_otro","contexto_adicional","dispositivos","email_acceso","email_proveedor","email_proveedor_otro"];
   for (var i = 0; i < fields.length; i++) {
     if (cleaned.indexOf("(" + fields[i] + ")") !== -1) return fields[i];
   }
@@ -277,6 +277,7 @@ function buildAgentDesignMd(data, person, agentName) {
     "- Preferred chat platform: " + field(data, "plataforma_chat"),
     "- Timezone: " + field(data, "zona_horaria"),
     "- AI model/provider preference: " + field(data, "pref_modelo_ia") + " (requires an OpenCode Go subscription, $10 USD/month)",
+    "- Email access requested: " + field(data, "email_acceso") + (data.email_proveedor ? " — provider: " + data.email_proveedor : "") + ". No credentials were collected here — the person must be walked through IMAP app-password (basic) or Google OAuth (full) setup directly when this is actually configured.",
     "",
     "## Additional Context",
     "In their own words, unprompted by any specific question: " + field(data, "contexto_adicional"),
@@ -355,6 +356,8 @@ function buildFullProfileMd(data, person, agentName) {
     "- Plataforma de chat: " + field(data, "plataforma_chat"),
     "- Zona horaria: " + field(data, "zona_horaria"),
     "- Preferencia modelo IA: " + field(data, "pref_modelo_ia"),
+    "- Acceso a email deseado: " + field(data, "email_acceso"),
+    "- Proveedor de correo: " + field(data, "email_proveedor"),
     "",
     "## Sección 10 — Algo más",
     "- " + field(data, "contexto_adicional"),
@@ -413,7 +416,10 @@ function testGenerateAgentDocs() {
     zona_horaria_otro: "",
     pref_modelo_ia: "GPT-4",
     pref_modelo_ia_otro: "",
-    contexto_adicional: "Me gustaría que el agente me ayude a no perder feedback importante en los hilos de Slack"
+    contexto_adicional: "Me gustaría que el agente me ayude a no perder feedback importante en los hilos de Slack",
+    email_acceso: "Básico",
+    email_proveedor: "Gmail",
+    email_proveedor_otro: ""
   };
 
   const result = generateAgentDocs(sampleData);
