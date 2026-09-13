@@ -129,6 +129,11 @@ select{cursor:pointer}
 .ty-downloads{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px}
 .ty-downloads[hidden]{display:none}
 .ty-downloads a{text-decoration:none}
+.prompt-box{margin-top:24px;text-align:left;background:var(--surface);border:1px solid var(--bdr);border-radius:var(--r);padding:14px}
+.prompt-box[hidden]{display:none}
+.prompt-box-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.prompt-box-label{font-size:12px;color:var(--txt2);line-height:1.5}
+.prompt-box-text{font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;min-height:120px;white-space:pre}
 .dl-hint{font-size:11px;color:var(--txt3);margin-top:8px}
 
 /* Responsive */
@@ -630,6 +635,14 @@ acceso de forma segura:
       <p class="dl-hint" data-key="dl_hint">Incluye SOUL.md, Agent-Design.md y Full-Profile.md</p>
     </div>
   </div>
+
+  <div class="prompt-box" id="promptBox" hidden>
+    <div class="prompt-box-head">
+      <p class="prompt-box-label" data-key="pb_label">Cuando tu agente esté listo, copia esto y pégalo en tu primer chat con él:</p>
+      <button type="button" class="btn btn-ghost" id="copyPromptBtn" data-key="pb_copy">Copiar</button>
+    </div>
+    <textarea class="prompt-box-text" id="promptBoxText" readonly rows="6"></textarea>
+  </div>
 </div>
 </main>
 
@@ -711,6 +724,8 @@ es:{
   bnxt:"Continuar →",bbck:"← Atrás",bsub:"Enviar respuestas →",
   tyh:"Listo.",typ:"Tus respuestas han sido enviadas. Diego las revisará y comenzará a construir tu agente personal.",
   dl_zip:"Descargar tus archivos (.zip)",dl_hint:"Incluye SOUL.md, Agent-Design.md y Full-Profile.md",
+  pb_label:"Cuando tu agente esté listo, copia esto y pégalo en tu primer chat con él:",
+  pb_copy:"Copiar",pb_copied:"¡Copiado!",
   sending:"Enviando…",err:"Error — intenta de nuevo",
   ty_messages:["Tu agente se está cocinando, se vienen cositas™","NPC convertido en protagonista.","Achievement unlocked: Primer empleado que no pide café.","Tu agente ya está haciendo estiramientos.","Las máquinas han tomado nota. No te preocupes… todavía."],
   areas:["Edición de Video","Motion Graphics / VFX","Diseño Gráfico","Contenido para Redes","Dirección Creativa","Estrategia / Planeación","Gestión de Proyectos","Administración / Operaciones"],
@@ -810,6 +825,8 @@ en:{
   bnxt:"Continue →",bbck:"← Back",bsub:"Submit responses →",
   tyh:"Done.",typ:"Your responses have been sent. Diego will review them and start building your personal agent.",
   dl_zip:"Download your files (.zip)",dl_hint:"Includes SOUL.md, Agent-Design.md, and Full-Profile.md",
+  pb_label:"Once your agent is ready, copy this and paste it into your first chat with it:",
+  pb_copy:"Copy",pb_copied:"Copied!",
   sending:"Sending…",err:"Error — try again",
   ty_messages:["Your agent is cooking.","NPC promoted to main character.","Achievement unlocked: First employee who doesn't need coffee.","Born to automate. Forced to fill forms.","We got your agent before GTA VI.","Your agent is warming up.","The machines have received your request. Don't panic… yet."],
   areas:["Video Editing / Production","Motion Graphics / VFX","Graphic Design","Social Media Content","Creative Direction","Strategy / Planning","Project Management","Admin / Operations"],
@@ -1131,7 +1148,7 @@ function pickTyMessage(){
 function fetchDownloadLinks(agentName){
   return new Promise(function(resolve){
     const cbName="hermesLinksCb_"+Date.now();
-    const timeout=setTimeout(function(){cleanup();resolve(null);},8000);
+    const timeout=setTimeout(function(){cleanup();resolve(null);},12000);
     function cleanup(){
       delete window[cbName];
       if(script.parentNode)script.parentNode.removeChild(script);
@@ -1153,7 +1170,26 @@ async function showDownloadLinks(agentName){
   if(!links)return; // best-effort — no links is not an error the user needs to see
   document.getElementById("dlZip").href=links.zipUrl;
   document.getElementById("tyDownloads").hidden=false;
+  if(links.onboardingPrompt){
+    document.getElementById("promptBoxText").value=links.onboardingPrompt;
+    document.getElementById("promptBox").hidden=false;
+  }
 }
+
+document.addEventListener("click",async function(e){
+  if(e.target&&e.target.id==="copyPromptBtn"){
+    const btn=e.target,ta=document.getElementById("promptBoxText");
+    try{
+      await navigator.clipboard.writeText(ta.value);
+    }catch(err){
+      ta.select();
+      document.execCommand("copy");
+    }
+    const original=btn.textContent;
+    btn.textContent=T[lang].pb_copied;
+    setTimeout(function(){btn.textContent=original;},1800);
+  }
+});
 
 // Submit
 document.getElementById("form").addEventListener("submit",async function(e){

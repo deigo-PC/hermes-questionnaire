@@ -26,7 +26,7 @@ Google Sheets — "📋 Respuestas" tab
 Google Drive — "Hermes Agent — Respuestas del Equipo/<agent>/" subfolder
         ↓  SOUL.md + Agent-Design.md + Full-Profile.md + a zip of all three
         ↓  client fetches the links back via a JSONP GET (doGet?action=links)
-Thank-you screen — one download button (zip of all three files)
+Thank-you screen — download button + a ready-to-paste onboarding prompt
 ```
 
 - The form collects all answers into a flat JSON object.
@@ -39,6 +39,7 @@ Thank-you screen — one download button (zip of all three files)
   Re-submitting under the same agent name replaces all three files (plus the zip) rather than piling up duplicates. This replaces the previously manual step of hand-writing those files from the sheet's "🗺️ Mapeo SOUL.md" tab.
 - If you hand-edit a row directly in the sheet after the fact, the files don't update automatically — use the **🔮 Hermes → Regenerar archivos (fila seleccionada)** menu (click any cell in that row first) to regenerate from the edited values. Manual on purpose, not an auto-trigger on every keystroke — see the comment above `onOpen()` in `APPS_SCRIPT_CODE.gs` for why.
 - Because the POST is `no-cors` (required for Apps Script — the browser can never read that response), the client can't get file links back from the POST itself. Instead, right after the POST resolves, the page loads a `<script>` tag pointed at `doGet(...)?action=links&agent=<name>&callback=...` (JSONP — not subject to CORS) to fetch the zip's download link, then reveals it as a button on the thank-you screen. If that lookup fails for any reason, the form still shows the normal thank-you message — the download button is best-effort, never a blocker.
+- That same JSONP response also includes a ready-to-paste **onboarding prompt** (`onboardingPrompt`, built by `buildOnboardingPrompt()` in `APPS_SCRIPT_CODE.gs`), shown in a copy-able textarea on the thank-you screen for the person to hand to their actual deployed Hermes Agent. It follows Hermes's own documented onboarding model, not an invented one: `SOUL.md` is file placement (`~/.hermes/SOUL.md`, loaded as system-prompt slot #1 on session start — [docs](https://hermes-agent.nousresearch.com/docs/guides/use-soul-with-hermes)), so the prompt instructs saving it there and restarting; everything else goes through the agent's own memory tool (`USER.md`/`MEMORY.md`, populated by being told things in conversation, not by direct file edits — [docs](https://hermes-agent.nousresearch.com/docs/user-guide/which-file-does-what)), so the prompt hands over `Agent-Design.md`'s content for the agent to read and remember. `Full-Profile.md` isn't re-pasted into the prompt (it's already in the downloaded zip as the raw reference copy) — inlining it too would roughly triple the length for mostly duplicate content.
 - Step 9 ("Config técnica") collects deployment preferences (chat platform, timezone, AI model/provider preference) — every question there has a "No sé / no entiendo" opt-out, since these can be genuinely unfamiliar to non-technical team members. It also discloses real costs: WhatsApp bills per conversation via the Business API, and an OpenCode Go subscription ($10 USD/month) is required for any agent to function at all.
 - No page reload, no external dependencies, works from any static host.
 

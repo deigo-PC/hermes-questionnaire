@@ -168,7 +168,9 @@ function downloadUrl(file) {
 
 // Looks up the (already-generated, in this same execution's very recent
 // past) files for an agent name, for the client's follow-up JSONP GET after
-// its no-cors POST resolves.
+// its no-cors POST resolves. Includes soul/design content (not just URLs) so
+// the thank-you screen can build a ready-to-paste onboarding prompt for the
+// person to hand to their actual Hermes Agent chat — see buildOnboardingPrompt().
 function getAgentDocLinks(agentName) {
   try {
     const name = safeFolderName(agentName);
@@ -183,16 +185,58 @@ function getAgentDocLinks(agentName) {
     if (!soulFiles.hasNext() || !designFiles.hasNext() || !profileFiles.hasNext() || !zipFiles.hasNext()) {
       return { success: false, error: "not found" };
     }
+    const soulFile = soulFiles.next();
+    const designFile = designFiles.next();
+    const profileFile = profileFiles.next();
+    const zipFile = zipFiles.next();
+    const soulContent = soulFile.getBlob().getDataAsString("UTF-8");
+    const designContent = designFile.getBlob().getDataAsString("UTF-8");
     return {
       success: true,
-      soulUrl: downloadUrl(soulFiles.next()),
-      designUrl: downloadUrl(designFiles.next()),
-      profileUrl: downloadUrl(profileFiles.next()),
-      zipUrl: downloadUrl(zipFiles.next())
+      soulUrl: downloadUrl(soulFile),
+      designUrl: downloadUrl(designFile),
+      profileUrl: downloadUrl(profileFile),
+      zipUrl: downloadUrl(zipFile),
+      onboardingPrompt: buildOnboardingPrompt(agentName, soulContent, designContent)
     };
   } catch (err) {
     return { success: false, error: err.toString() };
   }
+}
+
+// A ready-to-paste message for the person's first chat with their actual
+// deployed Hermes Agent. Follows Hermes's own documented onboarding model
+// (https://hermes-agent.nousresearch.com/docs/guides/use-soul-with-hermes,
+// .../which-file-does-what): SOUL.md is file placement (~/.hermes/SOUL.md,
+// loaded as system-prompt slot #1 on session start, not something chat
+// commands feed in), while everything else — profile facts, work context —
+// goes through the agent's own memory tool (USER.md/MEMORY.md), populated
+// by being told things in conversation. So this prompt does two different
+// things: instructs SOUL.md file placement, then hands over Agent-Design.md
+// for the agent to read and commit to memory itself. Full-Profile.md isn't
+// re-pasted here (it's already in the downloaded zip as the raw reference
+// copy) — inlining it too would roughly triple the length for mostly
+// duplicate content, which is exactly what good context hygiene avoids.
+function buildOnboardingPrompt(agentName, soulContent, designContent) {
+  return [
+    "Hola " + agentName + ". Este es mi onboarding — sígueme estos dos pasos.",
+    "",
+    "PASO 1 — Tu identidad",
+    "Guarda el siguiente bloque tal cual en ~/.hermes/SOUL.md. Si ya existe un SOUL.md con contenido real, avísame antes de sobreescribirlo. Luego reinicia o empieza una sesión nueva para que se active.",
+    "",
+    "--- INICIO SOUL.md ---",
+    soulContent,
+    "--- FIN SOUL.md ---",
+    "",
+    "PASO 2 — Quién soy y cómo trabajo",
+    "Lee lo siguiente y guarda en tu memoria (USER.md / MEMORY.md) lo que consideres importante recordar sobre mí — no hace falta guardarlo palabra por palabra, solo lo esencial para ayudarme mejor.",
+    "",
+    "--- INICIO CONTEXTO ---",
+    designContent,
+    "--- FIN CONTEXTO ---",
+    "",
+    "(El registro completo y sin filtrar de todas mis respuestas está en Full-Profile.md, dentro del zip que descargué — consúltalo si necesitas más detalle sobre algo específico.)"
+  ].join("\n");
 }
 
 function field(data, key, fallback) {
