@@ -26,7 +26,7 @@ Google Sheets — "📋 Respuestas" tab
 Google Drive — "Hermes Agent — Respuestas del Equipo/<agent>/" subfolder
         ↓  SOUL.md + Agent-Design.md + Full-Profile.md + a zip of all three
         ↓  client fetches the links back via a JSONP GET (doGet?action=links)
-Thank-you screen — download button + a ready-to-paste onboarding prompt
+Thank-you screen — numbered how-to guide + download button + onboarding prompt
 ```
 
 - The form collects all answers into a flat JSON object.

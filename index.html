@@ -129,11 +129,19 @@ select{cursor:pointer}
 .ty-downloads{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px}
 .ty-downloads[hidden]{display:none}
 .ty-downloads a{text-decoration:none}
-.prompt-box{margin-top:24px;text-align:left;background:var(--surface);border:1px solid var(--bdr);border-radius:var(--r);padding:14px}
+.prompt-box{margin-top:16px;text-align:left;background:var(--surface);border:1px solid var(--bdr);border-radius:var(--r);padding:14px}
 .prompt-box[hidden]{display:none}
 .prompt-box-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
 .prompt-box-label{font-size:12px;color:var(--txt2);line-height:1.5}
 .prompt-box-text{font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;min-height:120px;white-space:pre}
+
+/* How-to guide */
+.howto{margin-top:28px;text-align:left;background:var(--acc-dim2);border:1px solid var(--bdr);border-left:3px solid var(--acc);border-radius:var(--r);padding:16px 18px}
+.howto[hidden]{display:none}
+.howto-title{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-bottom:14px}
+.howto-steps{list-style:none;display:flex;flex-direction:column;gap:11px}
+.howto-steps li{display:flex;gap:11px;align-items:flex-start;font-size:13px;color:var(--txt2);line-height:1.55}
+.howto-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--acc);color:#0B0A08;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
 .dl-hint{font-size:11px;color:var(--txt3);margin-top:8px}
 
 /* Responsive */
@@ -629,6 +637,16 @@ acceso de forma segura:
   <span class="ty-glyph">◈</span>
   <h2 class="ty-title" data-key="tyh">Listo.</h2>
   <p class="ty-body" data-key="typ">Tus respuestas han sido enviadas. Diego las revisará y comenzará a construir tu agente personal.</p>
+  <div class="howto" id="howtoBox" hidden>
+    <p class="howto-title" data-key="howto_title">Cómo dárselo a tu agente</p>
+    <ol class="howto-steps">
+      <li><span class="howto-num">1</span><span data-key="howto_1">Descarga tus archivos con el botón de abajo — es un .zip con SOUL.md, Agent-Design.md y Full-Profile.md.</span></li>
+      <li><span class="howto-num">2</span><span data-key="howto_2">Copia el mensaje de onboarding (más abajo) con el botón "Copiar".</span></li>
+      <li><span class="howto-num">3</span><span data-key="howto_3">Cuando Diego termine de desplegar tu agente, abre el chat con él (Telegram u otro).</span></li>
+      <li><span class="howto-num">4</span><span data-key="howto_4">Pega el mensaje. Tu agente guardará su identidad (SOUL.md) y aprenderá sobre ti automáticamente.</span></li>
+    </ol>
+  </div>
+
   <div class="ty-downloads" id="tyDownloads" hidden>
     <div>
       <a class="btn btn-primary" id="dlZip" href="#" target="_blank" rel="noopener"><span data-key="dl_zip">Descargar tus archivos (.zip)</span></a>
@@ -638,7 +656,7 @@ acceso de forma segura:
 
   <div class="prompt-box" id="promptBox" hidden>
     <div class="prompt-box-head">
-      <p class="prompt-box-label" data-key="pb_label">Cuando tu agente esté listo, copia esto y pégalo en tu primer chat con él:</p>
+      <p class="prompt-box-label" data-key="pb_label">Tu mensaje de onboarding:</p>
       <button type="button" class="btn btn-ghost" id="copyPromptBtn" data-key="pb_copy">Copiar</button>
     </div>
     <textarea class="prompt-box-text" id="promptBoxText" readonly rows="6"></textarea>
@@ -724,8 +742,13 @@ es:{
   bnxt:"Continuar →",bbck:"← Atrás",bsub:"Enviar respuestas →",
   tyh:"Listo.",typ:"Tus respuestas han sido enviadas. Diego las revisará y comenzará a construir tu agente personal.",
   dl_zip:"Descargar tus archivos (.zip)",dl_hint:"Incluye SOUL.md, Agent-Design.md y Full-Profile.md",
-  pb_label:"Cuando tu agente esté listo, copia esto y pégalo en tu primer chat con él:",
+  pb_label:"Tu mensaje de onboarding:",
   pb_copy:"Copiar",pb_copied:"¡Copiado!",
+  howto_title:"Cómo dárselo a tu agente",
+  howto_1:"Descarga tus archivos con el botón de abajo — es un .zip con SOUL.md, Agent-Design.md y Full-Profile.md.",
+  howto_2:"Copia el mensaje de onboarding (más abajo) con el botón \"Copiar\".",
+  howto_3:"Cuando Diego termine de desplegar tu agente, abre el chat con él (Telegram u otro).",
+  howto_4:"Pega el mensaje. Tu agente guardará su identidad (SOUL.md) y aprenderá sobre ti automáticamente.",
   sending:"Enviando…",err:"Error — intenta de nuevo",
   ty_messages:["Tu agente se está cocinando, se vienen cositas™","NPC convertido en protagonista.","Achievement unlocked: Primer empleado que no pide café.","Tu agente ya está haciendo estiramientos.","Las máquinas han tomado nota. No te preocupes… todavía."],
   areas:["Edición de Video","Motion Graphics / VFX","Diseño Gráfico","Contenido para Redes","Dirección Creativa","Estrategia / Planeación","Gestión de Proyectos","Administración / Operaciones"],
@@ -825,8 +848,13 @@ en:{
   bnxt:"Continue →",bbck:"← Back",bsub:"Submit responses →",
   tyh:"Done.",typ:"Your responses have been sent. Diego will review them and start building your personal agent.",
   dl_zip:"Download your files (.zip)",dl_hint:"Includes SOUL.md, Agent-Design.md, and Full-Profile.md",
-  pb_label:"Once your agent is ready, copy this and paste it into your first chat with it:",
+  pb_label:"Your onboarding message:",
   pb_copy:"Copy",pb_copied:"Copied!",
+  howto_title:"How to give this to your agent",
+  howto_1:"Download your files with the button below — a .zip with SOUL.md, Agent-Design.md, and Full-Profile.md.",
+  howto_2:"Copy the onboarding message (further below) with the \"Copy\" button.",
+  howto_3:"Once Diego finishes deploying your agent, open the chat with it (Telegram or wherever it's set up).",
+  howto_4:"Paste the message. Your agent will save its identity (SOUL.md) and learn about you automatically.",
   sending:"Sending…",err:"Error — try again",
   ty_messages:["Your agent is cooking.","NPC promoted to main character.","Achievement unlocked: First employee who doesn't need coffee.","Born to automate. Forced to fill forms.","We got your agent before GTA VI.","Your agent is warming up.","The machines have received your request. Don't panic… yet."],
   areas:["Video Editing / Production","Motion Graphics / VFX","Graphic Design","Social Media Content","Creative Direction","Strategy / Planning","Project Management","Admin / Operations"],
@@ -1170,6 +1198,7 @@ async function showDownloadLinks(agentName){
   if(!links)return; // best-effort — no links is not an error the user needs to see
   document.getElementById("dlZip").href=links.zipUrl;
   document.getElementById("tyDownloads").hidden=false;
+  document.getElementById("howtoBox").hidden=false;
   if(links.onboardingPrompt){
     document.getElementById("promptBoxText").value=links.onboardingPrompt;
     document.getElementById("promptBox").hidden=false;
