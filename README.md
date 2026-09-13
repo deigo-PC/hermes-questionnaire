@@ -12,7 +12,7 @@ The form is **bilingual (Spanish / English)**, **zero-dependency** (a single HTM
 | 📂 GitHub repo | https://github.com/deigo-PC/hermes-questionnaire |
 | 📊 Responses spreadsheet | https://docs.google.com/spreadsheets/d/1IQJrKRx7-ik-nqXWDwpxcr_nP2EFIhfdGIl2dqvWz5I/ |
 | ⚙️ Apps Script editor | Spreadsheet → **Extensions → Apps Script** |
-| 🔌 Apps Script Web App URL | https://script.google.com/macros/s/AKfycbyqknqYIiqHgTvtVhR5F6HIRDAFp8QqEVo3hfJoDhL-qsRVCh1CAoOGFqb4skXC_jYJ/exec |
+| 🔌 Apps Script Web App URL | https://script.google.com/macros/s/AKfycbxIusFXxsrLMQScFB1aebm_eDjgOzoOv2ynl1MSATo79G1FXHAHjhLBw-MWBur88irP/exec |
 
 ## How It Works
 
