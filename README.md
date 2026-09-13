@@ -17,22 +17,28 @@ The form is **bilingual (Spanish / English)**, **zero-dependency** (a single HTM
 ## How It Works
 
 ```
-Team member fills the form (GitHub Pages, 9 steps)
+Team member fills the form (GitHub Pages, 10 steps)
         ↓  POST with mode: "no-cors", body: JSON (text/plain)
 Google Apps Script Web App (doPost handler)
         ↓  maps each column header → field name, appends a row
 Google Sheets — "📋 Respuestas" tab
         ↓  best-effort, wrapped so it can never break the row write above
-Google Drive — "Hermes Agent — SOUL Files/<agent>/" subfolder
-        ↓  SOUL.md + Agent-Design.md, auto-generated per submission
+Google Drive — "Hermes Agent — Respuestas del Equipo/<agent>/" subfolder
+        ↓  SOUL.md + Agent-Design.md + Full-Profile.md + a zip of all three
         ↓  client fetches the links back via a JSONP GET (doGet?action=links)
-Thank-you screen — download buttons for both files
+Thank-you screen — one download button (zip of all three files)
 ```
 
 - The form collects all answers into a flat JSON object.
 - Apps Script reads the header row (row 2), extracts each column's field name from the `(field_name)` suffix, and writes the matching value into a new row.
-- After the row is written, Apps Script also generates `SOUL.md` (identity, who the user is, technical profile, communication rules — the tight persona file meant to be loaded every turn) and `Agent-Design.md` (recurring processes, automation targets, growth goals, deployment preferences — a one-time build/ops brief) into a per-agent subfolder under `Hermes Agent — SOUL Files/` in Drive (created automatically next to the spreadsheet on first run). Re-submitting under the same agent name replaces the previous two files rather than piling up duplicates. This replaces the previously manual step of hand-writing those files from the sheet's "🗺️ Mapeo SOUL.md" tab.
-- Because the POST is `no-cors` (required for Apps Script — the browser can never read that response), the client can't get file links back from the POST itself. Instead, right after the POST resolves, the page loads a `<script>` tag pointed at `doGet(...)?action=links&agent=<name>&callback=...` (JSONP — not subject to CORS) to fetch the two Drive download links, then reveals them as buttons on the thank-you screen. If that lookup fails for any reason, the form still shows the normal thank-you message — the download buttons are best-effort, never a blocker.
+- After the row is written, Apps Script also generates three files into a per-agent subfolder under `Hermes Agent — Respuestas del Equipo/` in Drive (created automatically at the top level of "My Drive" on first run — always the same predictable place, regardless of where the spreadsheet itself lives):
+  - `SOUL.md` — identity, who the user is, a **Voice Sample** (the user's own writing quoted verbatim from a few of their free-text answers, so the agent can infer their natural tone/register rather than being told about it secondhand), technical profile, communication rules. The tight, always-loaded persona/behavior file.
+  - `Agent-Design.md` — recurring processes, automation targets, growth goals, deployment preferences. A one-time build/ops brief, not reloaded every turn.
+  - `Full-Profile.md` — the complete, unfiltered record of every answer, organized by the form's own 10 sections. Exists so nothing is ever lost regardless of how the other two files' curation evolves.
+  
+  Re-submitting under the same agent name replaces all three files (plus the zip) rather than piling up duplicates. This replaces the previously manual step of hand-writing those files from the sheet's "🗺️ Mapeo SOUL.md" tab.
+- If you hand-edit a row directly in the sheet after the fact, the files don't update automatically — use the **🔮 Hermes → Regenerar archivos (fila seleccionada)** menu (click any cell in that row first) to regenerate from the edited values. Manual on purpose, not an auto-trigger on every keystroke — see the comment above `onOpen()` in `APPS_SCRIPT_CODE.gs` for why.
+- Because the POST is `no-cors` (required for Apps Script — the browser can never read that response), the client can't get file links back from the POST itself. Instead, right after the POST resolves, the page loads a `<script>` tag pointed at `doGet(...)?action=links&agent=<name>&callback=...` (JSONP — not subject to CORS) to fetch the zip's download link, then reveals it as a button on the thank-you screen. If that lookup fails for any reason, the form still shows the normal thank-you message — the download button is best-effort, never a blocker.
 - Step 9 ("Config técnica") collects deployment preferences (chat platform, timezone, AI model/provider preference) — every question there has a "No sé / no entiendo" opt-out, since these can be genuinely unfamiliar to non-technical team members. It also discloses real costs: WhatsApp bills per conversation via the Business API, and an OpenCode Go subscription ($10 USD/month) is required for any agent to function at all.
 - No page reload, no external dependencies, works from any static host.
 
