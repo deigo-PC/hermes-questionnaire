@@ -72,7 +72,7 @@ function doGet(e) {
 
 function extractKey(header) {
   const cleaned = header.toString().replace(/[\r\n]+/g, " ").toLowerCase();
-  var fields = ["formspree_id","fuente","nombre","_replyto","rol","area_trabajo","area_otro","edad","trayectoria","tiempo_coord","tenure_otro","clientes","proyectos","proyectos_personales","semana_tipica","herramientas","tools_otro","sistema_op","sistema_op_otro","nivel_tech","exp_ai","usa_terminal","tareas_diarias","tareas_semanales","tareas_mensuales","proc_repetitivos","automatizar","info_repetitiva","se_pierde","directividad","idioma","proactividad","nunca","agente_nombre","agente_nombre_razon","agente_genero","agente_arquetipo","agente_humor","agente_trato","apodo","agente_reslen","habilidades","aprendizaje","apoyo","plataforma_chat","zona_horaria","zona_horaria_otro","pref_modelo_ia","pref_modelo_ia_otro","contexto_adicional"];
+  var fields = ["formspree_id","fuente","nombre","_replyto","rol","area_trabajo","area_otro","edad","trayectoria","tiempo_coord","tenure_otro","clientes","proyectos","proyectos_personales","semana_tipica","herramientas","tools_otro","sistema_op","sistema_op_otro","nivel_tech","exp_ai","usa_terminal","tareas_diarias","tareas_semanales","tareas_mensuales","proc_repetitivos","automatizar","info_repetitiva","se_pierde","directividad","idioma","proactividad","nunca","agente_nombre","agente_nombre_razon","agente_genero","agente_arquetipo","agente_humor","agente_trato","apodo","agente_reslen","habilidades","aprendizaje","apoyo","plataforma_chat","zona_horaria","zona_horaria_otro","pref_modelo_ia","pref_modelo_ia_otro","contexto_adicional","dispositivos"];
   for (var i = 0; i < fields.length; i++) {
     if (cleaned.indexOf("(" + fields[i] + ")") !== -1) return fields[i];
   }
@@ -231,7 +231,8 @@ function buildSoulMd(data, person, agentName) {
     "> Anything else they wanted to add, unprompted: " + field(data, "contexto_adicional"),
     "",
     "## Technical Advisor",
-    "- Operating system: " + field(data, "sistema_op"),
+    "- Operating system(s) used: " + field(data, "sistema_op"),
+    "- Devices owned: " + field(data, "dispositivos"),
     "- Comfort with technology: " + field(data, "nivel_tech"),
     "- Experience with AI tools: " + field(data, "exp_ai"),
     "- Terminal / command line: " + field(data, "usa_terminal"),
@@ -311,6 +312,7 @@ function buildFullProfileMd(data, person, agentName) {
     "- Proyectos personales: " + field(data, "proyectos_personales"),
     "- Semana típica: " + field(data, "semana_tipica"),
     "- Herramientas: " + field(data, "herramientas"),
+    "- Dispositivos: " + field(data, "dispositivos"),
     "",
     "## Sección 03 — Perfil técnico",
     "- Sistema operativo: " + field(data, "sistema_op"),
@@ -378,6 +380,7 @@ function testGenerateAgentDocs() {
     semana_tipica: "Lunes: reuniones, Martes-Jueves: diseño, Viernes: revisión",
     herramientas: "Figma, After Effects, Photoshop, Illustrator",
     tools_otro: "",
+    dispositivos: "Laptop (macOS), PC (Torre) (Windows), Teléfono (Android)",
     sistema_op: "macOS",
     sistema_op_otro: "",
     nivel_tech: "Intermedio — exploro herramientas cuando me las recomiendan",

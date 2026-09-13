@@ -65,13 +65,20 @@ main{position:relative;z-index:1;max-width:620px;margin:0 auto;padding:110px 24p
 .fopt{font-size:11px;color:var(--txt3);font-weight:400;margin-left:6px;font-family:'JetBrains Mono',monospace;letter-spacing:.06em}
 
 /* Inputs */
-input[type="text"],input[type="email"],input[type="number"],textarea{width:100%;background:var(--input);border:1px solid var(--bdr);border-radius:var(--r);color:var(--txt);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 14px;outline:none;transition:border-color var(--ease),box-shadow var(--ease);resize:vertical;line-height:1.6}
-input[type="text"]:focus,input[type="email"]:focus,input[type="number"]:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-dim)}
-input[type="text"]:hover:not(:focus),input[type="email"]:hover:not(:focus),input[type="number"]:hover:not(:focus),textarea:hover:not(:focus){border-color:var(--bdr-ho)}
+input[type="text"],input[type="email"],input[type="number"],select,textarea{width:100%;background:var(--input);border:1px solid var(--bdr);border-radius:var(--r);color:var(--txt);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 14px;outline:none;transition:border-color var(--ease),box-shadow var(--ease);resize:vertical;line-height:1.6}
+input[type="text"]:focus,input[type="email"]:focus,input[type="number"]:focus,select:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-dim)}
+input[type="text"]:hover:not(:focus),input[type="email"]:hover:not(:focus),input[type="number"]:hover:not(:focus),select:hover:not(:focus),textarea:hover:not(:focus){border-color:var(--bdr-ho)}
 input::placeholder,textarea::placeholder{color:var(--txt3)}
 textarea{min-height:88px}
 input[type="number"]{-moz-appearance:textfield}
 input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
+select{cursor:pointer}
+
+/* Device rows */
+.device-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start;margin-bottom:8px}
+.device-row select,.device-row input[type="text"]{flex:1 1 140px;min-width:0}
+.device-remove{flex:0 0 auto;background:transparent;border:1px solid var(--bdr);color:var(--txt3);border-radius:var(--r);width:40px;height:40px;font-size:16px;cursor:pointer;transition:var(--ease)}
+.device-remove:hover{border-color:var(--bdr-ho);color:var(--txt)}
 
 /* Opt grid */
 .opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
@@ -289,6 +296,12 @@ input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none}
     <div id="rv-tools" class="other-reveal">
       <input type="text" name="tools_otro" data-ph="otroph" placeholder="Especifica la herramienta…">
     </div>
+  </div>
+
+  <div class="field">
+    <div class="field-head"><span class="fnum">11b</span><span class="flabel" data-key="q11b">¿Qué dispositivos tienes?</span><span class="fopt" data-key="optl">opcional</span></div>
+    <div id="deviceRows"></div>
+    <button type="button" class="btn btn-ghost" id="addDeviceBtn" data-key="add_device">+ Agregar dispositivo</button>
   </div>
 
   <div class="nav">
@@ -601,6 +614,10 @@ es:{
   q09:"¿Cuáles son tus proyectos activos en este momento?",
   q10:"Describe una semana de trabajo típica",q10p:"¿Cómo se ve tu semana día a día? ¿Qué tipo de tareas hacen parte de tu rutina?",
   q11:"¿Qué herramientas usas a diario?",
+  q11b:"¿Qué dispositivos tienes?",
+  add_device:"+ Agregar dispositivo",
+  device_type_ph:"Tipo de dispositivo",device_os_ph:"Sistema operativo",
+  device_type_otro_ph:"¿Qué dispositivo?",device_os_otro_ph:"¿Qué sistema operativo?",
   q12:"¿Qué sistema(s) operativo(s) usas?",
   q13:"¿Cómo describirías tu nivel de comodidad con la tecnología?",
   q14:"¿Cuál es tu experiencia con herramientas de inteligencia artificial?",
@@ -647,6 +664,8 @@ es:{
   areas:["Edición de Video","Motion Graphics / VFX","Diseño Gráfico","Contenido para Redes","Dirección Creativa","Estrategia / Planeación","Gestión de Proyectos","Administración / Operaciones"],
   tenure:["Menos de 6 meses","6 a 12 meses","1 a 2 años","Más de 2 años"],
   tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Claude Code","OpenCode","Hermes Agent","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / código"],
+  deviceTypes:["Teléfono","Laptop","PC (Torre)","Servidor","Tablet","Otro"],
+  deviceOs:["Windows","macOS","Linux","Android","iOS","Otro"],
   os:["Windows","macOS","Linux","Mobile"],
   tech:["Básico — uso lo que me piden y ya","Intermedio — exploro herramientas cuando me las recomiendan","Avanzado — aprendo herramientas nuevas activamente","Experto — configuro sistemas, puedo escribir código o scripts"],
   ai_exp:["Nunca las he usado","Las uso ocasionalmente","Las uso todos los días","Las uso y también las integro en mis flujos de trabajo"],
@@ -684,6 +703,10 @@ en:{
   q09:"What are your active projects right now?",
   q10:"Describe a typical work week",q10p:"What does your week look like day to day? What kinds of tasks are part of your routine?",
   q11:"What tools do you use daily?",
+  q11b:"What devices do you own?",
+  add_device:"+ Add device",
+  device_type_ph:"Device type",device_os_ph:"Operating system",
+  device_type_otro_ph:"Which device?",device_os_otro_ph:"Which OS?",
   q12:"What operating system(s) do you use?",
   q13:"How would you describe your comfort level with technology?",
   q14:"What is your experience with artificial intelligence tools?",
@@ -730,6 +753,8 @@ en:{
   areas:["Video Editing / Production","Motion Graphics / VFX","Graphic Design","Social Media Content","Creative Direction","Strategy / Planning","Project Management","Admin / Operations"],
   tenure:["Less than 6 months","6 to 12 months","1 to 2 years","More than 2 years"],
   tools:["Adobe Premiere","After Effects","CapCut","Photoshop / Illustrator","Figma","Canva","Google Workspace","Discord / Slack","Notion","ChatGPT","Claude","Claude Code","OpenCode","Hermes Agent","Higgsfield","Midjourney / Flux","Adobe Firefly","n8n","Python / code"],
+  deviceTypes:["Phone","Laptop","PC (Tower)","Server","Tablet","Other"],
+  deviceOs:["Windows","macOS","Linux","Android","iOS","Other"],
   os:["Windows","macOS","Linux","Mobile"],
   tech:["Basic — I use what I'm told and that's it","Intermediate — I explore tools when recommended","Advanced — I actively learn new tools","Expert — I configure systems, can write code or scripts"],
   ai_exp:["Never used them","Occasionally","Every day","I use them and integrate them into my workflows"],
@@ -783,6 +808,70 @@ function buildAllGrids(){
   buildGrid("g-modelpref","modelpref","pref_modelo_ia","radio","rv-modelpref");
 }
 
+// Devices (Q11b) — a repeatable list, not a fixed option grid, so it's
+// handled separately from buildGrid. State lives in deviceEntries (indices
+// into T[lang].deviceTypes/deviceOs, language-independent) so switching
+// languages mid-form re-renders labels without losing selections, and
+// "last option = Otro" is detected by index rather than by text, since the
+// text itself changes per language.
+let deviceEntries=[];
+
+function renderDeviceRows(){
+  const container=document.getElementById("deviceRows");
+  if(!container)return;
+  const types=T[lang].deviceTypes,oses=T[lang].deviceOs;
+  const esc=s=>(s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+  container.innerHTML=deviceEntries.map((e,i)=>{
+    const typeOpts=types.map((t,ti)=>`<option value="${ti}"${ti===e.type?" selected":""}>${t}</option>`).join("");
+    const osOpts=oses.map((o,oi)=>`<option value="${oi}"${oi===e.os?" selected":""}>${o}</option>`).join("");
+    const showTypeOtro=e.type===types.length-1;
+    const showOsOtro=e.os===oses.length-1;
+    return `<div class="device-row" data-row="${i}">
+      <select data-row="${i}" data-field="type">${typeOpts}</select>
+      <input type="text" data-row="${i}" data-field="typeOtro" placeholder="${esc(T[lang].device_type_otro_ph)}" value="${esc(e.typeOtro)}"${showTypeOtro?"":' style="display:none"'}>
+      <select data-row="${i}" data-field="os">${osOpts}</select>
+      <input type="text" data-row="${i}" data-field="osOtro" placeholder="${esc(T[lang].device_os_otro_ph)}" value="${esc(e.osOtro)}"${showOsOtro?"":' style="display:none"'}>
+      <button type="button" class="device-remove" data-row="${i}">×</button>
+    </div>`;
+  }).join("");
+}
+
+document.addEventListener("click",function(e){
+  if(e.target&&e.target.id==="addDeviceBtn"){
+    deviceEntries.push({type:0,os:0,typeOtro:"",osOtro:""});
+    renderDeviceRows();
+  }
+  const removeBtn=e.target&&e.target.closest&&e.target.closest(".device-remove");
+  if(removeBtn){
+    deviceEntries.splice(+removeBtn.dataset.row,1);
+    renderDeviceRows();
+  }
+});
+
+document.addEventListener("change",function(e){
+  const el=e.target;
+  if(el.dataset&&(el.dataset.field==="type"||el.dataset.field==="os")&&el.closest("#deviceRows")){
+    deviceEntries[+el.dataset.row][el.dataset.field]=+el.value;
+    renderDeviceRows();
+  }
+});
+
+document.addEventListener("input",function(e){
+  const el=e.target;
+  if(el.dataset&&(el.dataset.field==="typeOtro"||el.dataset.field==="osOtro")){
+    deviceEntries[+el.dataset.row][el.dataset.field]=el.value;
+  }
+});
+
+function serializeDevices(){
+  const types=T[lang].deviceTypes,oses=T[lang].deviceOs;
+  return deviceEntries.map(e=>{
+    let t=types[e.type]; if(e.type===types.length-1&&e.typeOtro)t=e.typeOtro;
+    let o=oses[e.os]; if(e.os===oses.length-1&&e.osOtro)o=e.osOtro;
+    return o?(t+" ("+o+")"):t;
+  }).join(", ");
+}
+
 // Language
 function setLang(l){
   lang=l;
@@ -798,6 +887,7 @@ function setLang(l){
   document.querySelectorAll("[data-ph]").forEach(el=>{const k=el.dataset.ph;if(t[k]!==undefined)el.placeholder=t[k];});
   // Rebuild grids to get translated options
   buildAllGrids();
+  renderDeviceRows();
   // Restore "Other" reveals that were open
   document.querySelectorAll(".other-reveal.show,.personal-reveal.show").forEach(el=>{
     // keep open — user had interacted
@@ -910,7 +1000,8 @@ function collectFormData(){
     zona_horaria:"",
     zona_horaria_otro:document.querySelector('[name="zona_horaria_otro"]')?.value||"",
     pref_modelo_ia:"",
-    contexto_adicional:document.querySelector('[name="contexto_adicional"]')?.value||""
+    contexto_adicional:document.querySelector('[name="contexto_adicional"]')?.value||"",
+    dispositivos:serializeDevices()
   };
   // Collect checkbox grids (comma-separated, merge "Other" values)
   const grids=[
